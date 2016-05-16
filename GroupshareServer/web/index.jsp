@@ -11,6 +11,6 @@
     <title>$Title$</title>
   </head>
   <body>
-  $END$
+  <h1>Well this is a change</h1>
   </body>
 </html>
