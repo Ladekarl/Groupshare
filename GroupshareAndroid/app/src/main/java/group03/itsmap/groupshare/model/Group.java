@@ -1,6 +1,8 @@
 package group03.itsmap.groupshare.model;
 
-public class Group {
+import java.io.Serializable;
+
+public class Group implements Serializable {
 
     private String name;
 
