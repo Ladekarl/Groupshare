@@ -7,10 +7,7 @@
         <element id="directory" name="classes">
           <element id="module-output" name="GroupshareServer" />
         </element>
-        <element id="directory" name="lib">
-          <element id="library" level="project" name="AppEngine API" />
-          <element id="library" level="project" name="AppEngine ORM" />
-        </element>
+        <element id="directory" name="lib" />
       </element>
     </root>
   </artifact>
