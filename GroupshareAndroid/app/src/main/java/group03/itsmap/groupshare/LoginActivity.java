@@ -2,6 +2,7 @@ package group03.itsmap.groupshare;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -14,6 +15,9 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -54,14 +58,20 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if(isLoggedIn()) {
-            startGroupOverviewActivity();
-        }
+        Handler checkLoginHandler = new Handler();
+        checkLoginHandler.postDelayed(new Runnable() {
+            public void run() {
+                if(isLoggedIn()) {
+                    startGroupOverviewActivity();
+                }
+            }
+        }, 200);
     }
 
     private void startGroupOverviewActivity() {
         Intent startGroupOverviewIntent = new Intent(LoginActivity.this, GroupOverviewActivity.class);
         startActivity(startGroupOverviewIntent);
+        finish();
     }
 
     public boolean isLoggedIn() {

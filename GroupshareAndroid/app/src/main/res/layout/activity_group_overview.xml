@@ -15,19 +15,24 @@
         app:theme="@style/AppTheme.Toolbar">
 
         <TextView
-            android:id="@+id/toolbar_title"
+            android:id="@+id/group_overview_toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/app_name"
+            android:text="@string/groups"
             android:textSize="18sp" />
     </android.support.v7.widget.Toolbar>
 
-    <ListView
-        android:id="@+id/group_listView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <GridView
+        android:id="@+id/group_gridView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:layout_below="@+id/group_overview_toolbar"
-        android:divider="@null" />
+        android:horizontalSpacing="10sp"
+        android:numColumns="auto_fit"
+        android:gravity="center"
+        android:padding="20dp"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="10sp" />
 
 </RelativeLayout>

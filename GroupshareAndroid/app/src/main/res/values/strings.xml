@@ -16,4 +16,6 @@
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="group_name">Group Name</string>
+    <string name="forward_image">forward image</string>
+    <string name="groups">Groups</string>
 </resources>

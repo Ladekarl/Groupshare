@@ -6,4 +6,22 @@
     <color name="colorBackground">#E3F2FD</color>
     <color name="group_button_inner">#E2E4E6</color>
     <color name="group_button_outer">#b1b2b4</color>
+    <color name="group_list_1">#0079BF</color>
+    <color name="group_list_1_outer">#00649e</color>
+    <color name="group_list_2">#4BBF6B</color>
+    <color name="group_list_2_outer">#3e9f59</color>
+    <color name="group_list_3">#838C91</color>
+    <color name="group_list_3_outer">#666d71</color>
+    <color name="group_list_4">#B04632</color>
+    <color name="group_list_4_outer">#893627</color>
+    <color name="group_list_5">#00AECC</color>
+    <color name="group_list_5_outer">#0098b3</color>
+    <color name="group_list_6">#89603E</color>
+    <color name="group_list_6_outer">#735034</color>
+    <color name="group_list_7">#CD5A91</color>
+    <color name="group_list_7_outer">#bc5285</color>
+    <color name="group_list_8">#D29034</color>
+    <color name="group_list_8_outer">#b97e2d</color>
+    <color name="group_list_9">#89609E</color>
+    <color name="group_list_9_outer">#775389</color>
 </resources>

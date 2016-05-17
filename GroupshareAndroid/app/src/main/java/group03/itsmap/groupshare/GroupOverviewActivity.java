@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ListView;
 
 import group03.itsmap.groupshare.adapter.GroupListAdapter;
@@ -18,7 +19,7 @@ import group03.itsmap.groupshare.model.Group;
 
 public class GroupOverviewActivity extends AppCompatActivity {
 
-    private ListView groupListView;
+    private GridView groupListView;
     private GroupListAdapter groupListAdapter;
 
     @Override
@@ -26,7 +27,7 @@ public class GroupOverviewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_overview);
 
-        groupListView = (ListView) findViewById(R.id.group_listView);
+        groupListView = (GridView) findViewById(R.id.group_gridView);
         groupListAdapter = new GroupListAdapter(this, R.layout.group_list_row);
         groupListView.setAdapter(groupListAdapter);
 
