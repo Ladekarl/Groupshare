@@ -11,7 +11,6 @@ import group03.itsmap.groupshare.model.Group;
 
 public class GroupActivity extends AppCompatActivity {
 
-    private TextView textView;
     private Group group;
 
     @Override
@@ -19,19 +18,17 @@ public class GroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
 
-        textView = (TextView) findViewById(R.id.group_name_textView);
         Toolbar groupToolbar = (Toolbar) findViewById(R.id.group_toolbar);
         group = (Group) getIntent().getSerializableExtra("group");
         setSupportActionBar(groupToolbar);
-        if (group != null) {
-            textView.setText("Group name: " + group.getName());
-        }
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(true);
+
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+            supportActionBar.setDisplayShowHomeEnabled(true);
+            supportActionBar.setDisplayShowTitleEnabled(true);
             if (group != null) {
-                getSupportActionBar().setTitle(group.getName());
+                supportActionBar.setTitle(group.getName());
             }
         }
 

@@ -14,15 +14,11 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/AppTheme.Toolbar" />
 
-    <TextView
-        android:id="@+id/group_name_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/group_toolbar"
-        android:layout_marginLeft="24dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp" />
+    <fragment android:name="group03.itsmap.groupshare.ToDoFragment"
+        android:id="@+id/viewer"
+        android:layout_width="match_parent"
+        android:layout_below="@id/group_toolbar"
+        android:layout_height="150dp"
+        tools:layout="@layout/fragment_todo" />
 
 </RelativeLayout>
