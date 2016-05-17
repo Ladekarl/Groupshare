@@ -1,6 +1,7 @@
 package group03.itsmap.groupshare.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 
+import group03.itsmap.groupshare.GroupActivity;
 import group03.itsmap.groupshare.R;
 import group03.itsmap.groupshare.model.Group;
 
@@ -27,7 +29,7 @@ public class GroupListAdapter extends ArrayAdapter<Group> {
             v = vi.inflate(R.layout.group_list_row, null);
         }
 
-        Group group = getItem(position);
+        final Group group = getItem(position);
 
         if (group != null) {
             Button groupButton = (Button) v.findViewById(R.id.group_list_button);
@@ -40,6 +42,15 @@ public class GroupListAdapter extends ArrayAdapter<Group> {
 //                    groupButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.groupListOdd));
 //                }
 
+                groupButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(v.getContext(), GroupActivity.class);
+                        // TODO: Create class to for shared Intent keys
+                        intent.putExtra("group", group);
+                        v.getContext().startActivity(intent);
+                    }
+                });
             }
         }
         return v;
