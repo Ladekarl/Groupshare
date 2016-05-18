@@ -23,6 +23,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private CallbackManager callbackManager;
 
+    // TODO: Fix externalization of view!
     // Facebook integration implementation from https://developers.facebook.com/docs/facebook-login/android
     @Override
     public void onCreate(Bundle savedInstanceState) {
