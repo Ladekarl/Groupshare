@@ -22,4 +22,5 @@
     <string name="please_login_with_facebook_n_to_start_using_groupshare">Please login with Facebook \n to start using GroupShare:</string>
     <string name="welcome">Welcome!</string>
     <string name="remove_todo_item">remove todo item</string>
+    <string name="save_group_error">Something went wrong, try again!</string>
 </resources>

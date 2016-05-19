@@ -17,6 +17,7 @@ import java.util.List;
 import group03.itsmap.groupshare.GroupActivity;
 import group03.itsmap.groupshare.R;
 import group03.itsmap.groupshare.model.Group;
+import group03.itsmap.groupshare.utils.IntentKey;
 
 public class GroupListAdapter extends ArrayAdapter<Group> {
 
@@ -65,7 +66,7 @@ public class GroupListAdapter extends ArrayAdapter<Group> {
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), GroupActivity.class);
                     // TODO: Create class to for shared Intent keys
-                    intent.putExtra("group", group);
+                    intent.putExtra(IntentKey.GroupActivityIntent, group);
                     v.getContext().startActivity(intent);
                 }
             });
