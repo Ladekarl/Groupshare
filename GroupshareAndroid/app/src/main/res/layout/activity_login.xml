@@ -31,20 +31,20 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome!"
+        android:text="@string/welcome"
         android:id="@+id/textView"
-        android:textColor="@color/primary_dark_material_light"
-        android:textSize="24dp"
+        android:textColor="@color/grey_text_color"
+        android:textSize="24sp"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Please login with Facebook \n to start using GroupShare:"
+        android:text="@string/please_login_with_facebook_n_to_start_using_groupshare"
         android:id="@+id/textView2"
         android:layout_marginBottom="25dp"
-        android:textColor="@color/primary_dark_material_light"
+        android:textColor="@color/grey_text_color"
         android:layout_above="@+id/login_button"
         android:layout_alignLeft="@+id/login_button"
         android:layout_alignStart="@+id/login_button" />

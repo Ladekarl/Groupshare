@@ -19,4 +19,6 @@
     <string name="forward_image">forward image</string>
     <string name="groups">Groups</string>
     <string name="todo_list_text">This stuff needs to be done</string>
+    <string name="please_login_with_facebook_n_to_start_using_groupshare">Please login with Facebook \n to start using GroupShare:</string>
+    <string name="welcome">Welcome!</string>
 </resources>

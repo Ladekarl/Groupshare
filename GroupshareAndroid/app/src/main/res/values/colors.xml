@@ -24,4 +24,5 @@
     <color name="group_list_8_outer">#b97e2d</color>
     <color name="group_list_9">#89609E</color>
     <color name="group_list_9_outer">#775389</color>
+    <color name="grey_text_color">#ff757575</color>
 </resources>
