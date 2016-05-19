@@ -137,7 +137,7 @@ public class GroupActivity extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
 
-        dialog.getListView().setAdapter(new ArrayAdapter<Friend>(this,
+        dialog.getListView().setAdapter(new ArrayAdapter<>(this,
                 R.layout.invite_friends, friends));
         dialog.getListView().setItemsCanFocus(false);
         dialog.getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);

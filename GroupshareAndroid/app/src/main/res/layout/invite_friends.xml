@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="wrap_content"
+    android:padding="5dp">
 
     <ImageView
         android:id="@+id/invite_friends_picture"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"/>
 
@@ -15,13 +17,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/invite_friends_picture"
-        android:layout_toEndOf="@id/invite_friends_picture"/>
+        android:layout_toEndOf="@id/invite_friends_picture"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:layout_centerVertical="true"/>
 
     <RadioButton
         android:id="@+id/invite_friends_radio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
         android:layout_alignParentRight="true"/>
 
 </RelativeLayout>
