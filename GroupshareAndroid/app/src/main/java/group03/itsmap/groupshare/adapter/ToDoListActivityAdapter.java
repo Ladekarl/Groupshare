@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,8 +68,6 @@ public class ToDoListActivityAdapter extends ArrayAdapter<ToDoItem> {
                 }
             }
 
-
-
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -78,6 +77,15 @@ public class ToDoListActivityAdapter extends ArrayAdapter<ToDoItem> {
                     view.findViewById(R.id.todo_item_delete).setVisibility(View.VISIBLE);
                 }
             });
+
+            ImageButton removeButton = (ImageButton) v.findViewById(R.id.todo_item_delete);
+            removeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((ListView) parent).performItemClick(v, position, 0);
+                }
+            });
+            removeButton.setTag(item);
         }
 
         return v;
