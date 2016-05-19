@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/group_list_5"
+    tools:context="group03.itsmap.groupshare.ToDoActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/todo_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/AppTheme.Toolbar" />
+
+    <TextView
+        android:id="@+id/todo_act_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/todo_toolbar"
+        android:layout_margin="20dp"
+        android:gravity="center"
+        android:text="@string/todo_list_text"
+        android:textSize="20sp" />
+
+    <ListView
+        android:id="@+id/act_todo_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/todo_act_text"
+        android:layout_margin="20dp"
+        android:divider="@null" />
+
+</RelativeLayout>

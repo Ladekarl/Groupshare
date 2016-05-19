@@ -12,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ListView;
 
 import group03.itsmap.groupshare.adapter.GroupListAdapter;
 import group03.itsmap.groupshare.model.Group;
