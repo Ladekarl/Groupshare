@@ -7,7 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -53,5 +56,30 @@ public class ToDoActivity extends AppCompatActivity {
                 }
             });
         }
+
+        ImageButton removeButton = (ImageButton) toDoListView.findViewById(R.id.todo_item_delete);
+        if (removeButton != null) {
+            removeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ToDoItem item = (ToDoItem) v.getTag();
+                    toDoList.remove(item);
+                    toDoListActivityAdapter.remove(item);
+                    toDoListActivityAdapter.notifyDataSetChanged();
+                }
+            });
+        }
+
+        toDoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (view.getId() == R.id.todo_item_delete) {
+                    ToDoItem item = (ToDoItem) view.getTag();
+                    toDoList.remove(item);
+                    toDoListActivityAdapter.remove(item);
+                    toDoListActivityAdapter.notifyDataSetChanged();
+                }
+            }
+        });
     }
 }
