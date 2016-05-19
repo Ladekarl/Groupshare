@@ -13,6 +13,14 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import group03.itsmap.groupshare.adapter.GroupListAdapter;
 import group03.itsmap.groupshare.model.Group;
@@ -33,7 +41,7 @@ public class GroupOverviewActivity extends AppCompatActivity {
 
         Toolbar groupOverviewToolbar = (Toolbar) findViewById(R.id.group_overview_toolbar);
         setSupportActionBar(groupOverviewToolbar);
-        if(getSupportActionBar() != null) {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
     }
@@ -67,13 +75,13 @@ public class GroupOverviewActivity extends AppCompatActivity {
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         input.setGravity(Gravity.CENTER);
         builder.setView(input);
+        final String groupName = input.getText().toString();
 
         builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String groupName = input.getText().toString();
-                // TODO ADD GROUP TO SERVER
-                groupListAdapter.add(new Group(groupName));
+                final String groupName = input.getText().toString();
+                createGroup(groupName);
             }
         });
         builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -84,5 +92,43 @@ public class GroupOverviewActivity extends AppCompatActivity {
         });
 
         builder.show();
+    }
+
+    private void createGroup(final String groupName) {
+
+        GraphRequest request = GraphRequest.newMeRequest(
+                AccessToken.getCurrentAccessToken(),
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        saveGroup(groupName, object);
+                    }
+                });
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id");
+        request.setParameters(parameters);
+        request.executeAsync();
+
+
+        // TODO ADD GROUP TO SERVER
+
+    }
+
+    private void saveGroup(String groupName, JSONObject object) {
+        Long id = null;
+
+        try {
+            String idString = (String) object.get("id");
+            id = Long.valueOf(idString);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (id != null) {
+            groupListAdapter.add(new Group(groupName, id));
+        } else {
+            Toast.makeText(GroupOverviewActivity.this, R.string.save_group_error, Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

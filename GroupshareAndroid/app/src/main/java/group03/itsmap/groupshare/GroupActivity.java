@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import group03.itsmap.groupshare.model.Group;
+import group03.itsmap.groupshare.utils.IntentKey;
 
 public class GroupActivity extends AppCompatActivity {
 
@@ -19,7 +20,7 @@ public class GroupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_group);
 
         Toolbar groupToolbar = (Toolbar) findViewById(R.id.group_toolbar);
-        group = (Group) getIntent().getSerializableExtra("group");
+        group = (Group) getIntent().getSerializableExtra(IntentKey.GroupActivityIntent);
         setSupportActionBar(groupToolbar);
 
         ActionBar supportActionBar = getSupportActionBar();
