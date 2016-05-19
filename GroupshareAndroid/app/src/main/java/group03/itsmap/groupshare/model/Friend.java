@@ -1,6 +1,29 @@
 package group03.itsmap.groupshare.model;
 
 public class Friend {
+
+    private long facebookId;
+    private String Name;
+    private String pictureUrl;
+
+    public Friend() {
+
+    }
+
+    public Friend(long facebookId, String name, String pictureUrl) {
+        this.facebookId = facebookId;
+        Name = name;
+        this.pictureUrl = pictureUrl;
+    }
+
+    public long getFacebookId() {
+        return facebookId;
+    }
+
+    public void setFacebookId(long facebookId) {
+        this.facebookId = facebookId;
+    }
+
     public String getName() {
         return Name;
     }
@@ -9,12 +32,11 @@ public class Friend {
         Name = name;
     }
 
-    private String Name;
-
-    public Friend(String name) {
-        Name = name;
+    public String getPictureUrl() {
+        return pictureUrl;
     }
 
-    public Friend() {
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 }

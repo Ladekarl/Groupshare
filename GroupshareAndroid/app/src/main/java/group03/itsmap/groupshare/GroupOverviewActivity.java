@@ -75,7 +75,6 @@ public class GroupOverviewActivity extends AppCompatActivity {
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         input.setGravity(Gravity.CENTER);
         builder.setView(input);
-        final String groupName = input.getText().toString();
 
         builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
             @Override
@@ -95,7 +94,6 @@ public class GroupOverviewActivity extends AppCompatActivity {
     }
 
     private void createGroup(final String groupName) {
-
         GraphRequest request = GraphRequest.newMeRequest(
                 AccessToken.getCurrentAccessToken(),
                 new GraphRequest.GraphJSONObjectCallback() {
@@ -108,10 +106,6 @@ public class GroupOverviewActivity extends AppCompatActivity {
         parameters.putString("fields", "id");
         request.setParameters(parameters);
         request.executeAsync();
-
-
-        // TODO ADD GROUP TO SERVER
-
     }
 
     private void saveGroup(String groupName, JSONObject object) {
@@ -125,6 +119,7 @@ public class GroupOverviewActivity extends AppCompatActivity {
         }
 
         if (id != null) {
+            // TODO ADD GROUP TO SERVER
             groupListAdapter.add(new Group(groupName, id));
         } else {
             Toast.makeText(GroupOverviewActivity.this, R.string.save_group_error, Toast.LENGTH_SHORT).show();

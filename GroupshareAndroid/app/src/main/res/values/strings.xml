@@ -23,4 +23,7 @@
     <string name="welcome">Welcome!</string>
     <string name="remove_todo_item">remove todo item</string>
     <string name="save_group_error">Something went wrong, try again!</string>
+    <string name="group_menu">Group Menu</string>
+    <string name="invite_friends">Invite friends</string>
+    <string name="delete_group">Delete group</string>
 </resources>
