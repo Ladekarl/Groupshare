@@ -1,35 +1,26 @@
 package group03.itsmap.groupshare.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.InputStream;
 import java.util.List;
 
-import group03.itsmap.groupshare.GroupActivity;
 import group03.itsmap.groupshare.R;
 import group03.itsmap.groupshare.model.Friend;
-import group03.itsmap.groupshare.model.Group;
-import group03.itsmap.groupshare.utils.IntentKey;
 
 public class InviteFriendsAdapter extends ArrayAdapter<Friend> {
-
-    public InviteFriendsAdapter(Context context, int resource) {
-        super(context, resource);
-    }
 
     public InviteFriendsAdapter(Context context, int resource, List<Friend> friends) {
         super(context, resource);
@@ -59,6 +50,24 @@ public class InviteFriendsAdapter extends ArrayAdapter<Friend> {
             TextView nameTextView = (TextView) v.findViewById(R.id.invite_friends_name);
             if (nameTextView != null) {
                 nameTextView.setText(friend.getName());
+            }
+
+            final CheckBox checkBox =  (CheckBox) v.findViewById(R.id.invite_friends_checkbox);
+
+            if (checkBox != null) {
+               /* checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        Toast.makeText(getContext(), "Checked:" + isChecked, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                v.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        checkBox.setChecked(!checkBox.isChecked());
+                    }
+                });*/
             }
         }
         return v;

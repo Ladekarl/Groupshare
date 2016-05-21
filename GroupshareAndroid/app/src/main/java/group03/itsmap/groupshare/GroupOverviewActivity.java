@@ -12,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -23,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import group03.itsmap.groupshare.adapter.GroupListAdapter;
+import group03.itsmap.groupshare.model.Friend;
 import group03.itsmap.groupshare.model.Group;
 
 public class GroupOverviewActivity extends AppCompatActivity {
@@ -114,13 +114,15 @@ public class GroupOverviewActivity extends AppCompatActivity {
         try {
             String idString = (String) object.get("id");
             id = Long.valueOf(idString);
+
+            Friend groupCreater = new Friend();
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         if (id != null) {
             // TODO ADD GROUP TO SERVER
-            groupListAdapter.add(new Group(groupName, id));
+            groupListAdapter.add(new Group(groupName));
         } else {
             Toast.makeText(GroupOverviewActivity.this, R.string.save_group_error, Toast.LENGTH_SHORT).show();
         }

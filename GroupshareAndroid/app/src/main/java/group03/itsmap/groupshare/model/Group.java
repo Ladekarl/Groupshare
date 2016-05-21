@@ -7,20 +7,20 @@ import java.util.List;
 public class Group implements Serializable {
 
     private String name;
-    private List<Long> members;
+    private List<Friend> friends;
 
     public Group() {
     }
 
     public Group(String name) {
         this.name = name;
-        members = new ArrayList<>();
+        friends = new ArrayList<>();
     }
 
-    public Group(String name, long member) {
+    public Group(String name, Friend friend) {
         this.name = name;
-        members = new ArrayList<>();
-        members.add(member);
+        friends = new ArrayList<>();
+        friends.add(friend);
     }
 
     public String getName() {
@@ -31,11 +31,11 @@ public class Group implements Serializable {
         this.name = name;
     }
 
-    public List<Long> getMembers() {
-        return members;
+    public List<Friend> getFriends() {
+        return friends;
     }
 
-    public void setMembers(List<Long> members) {
-        this.members = members;
+    public void setFriends(List<Friend> friends) {
+        this.friends = friends;
     }
 }

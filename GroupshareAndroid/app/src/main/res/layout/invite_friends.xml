@@ -10,7 +10,10 @@
         android:layout_height="50dp"
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"/>
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:focusable="false"/>
 
     <TextView
         android:id="@+id/invite_friends_name"
@@ -20,14 +23,21 @@
         android:layout_toEndOf="@id/invite_friends_picture"
         android:textColor="@android:color/black"
         android:textSize="20sp"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:focusable="false"/>
 
-    <RadioButton
-        android:id="@+id/invite_friends_radio"
+    <CheckBox
+        android:id="@+id/invite_friends_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
+        android:focusable="false"
+        android:clickable="false"/>
 
 </RelativeLayout>

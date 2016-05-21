@@ -1,18 +1,21 @@
 package group03.itsmap.groupshare;
 
 import android.content.DialogInterface;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -28,8 +31,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import group03.itsmap.groupshare.adapter.InviteFriendsAdapter;
-import group03.itsmap.groupshare.model.Group;
 import group03.itsmap.groupshare.model.Friend;
+import group03.itsmap.groupshare.model.Group;
 import group03.itsmap.groupshare.utils.IntentKey;
 
 public class GroupActivity extends AppCompatActivity {
@@ -118,8 +121,10 @@ public class GroupActivity extends AppCompatActivity {
 
     // Dialog based on http://stackoverflow.com/questions/10932832/multiple-choice-alertdialog-with-custom-adapter
     private void showDialogForFriends(List<Friend> friends) {
+        final List<Friend> friendsToBeInvited = new ArrayList<>();
+
         ArrayAdapter adapter = new InviteFriendsAdapter(GroupActivity.this, R.layout.invite_friends, friends);
-        AlertDialog.Builder builder = new AlertDialog.Builder(GroupActivity.this)
+        AlertDialog dialog = new AlertDialog.Builder(GroupActivity.this)
                 .setTitle(R.string.invite_friends)
                 .setAdapter(adapter, null)
                 .setPositiveButton("Invite friends", new DialogInterface.OnClickListener() {
@@ -131,22 +136,43 @@ public class GroupActivity extends AppCompatActivity {
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        Log.d("LOG", "cancel");
                     }
-                });
-
-        AlertDialog dialog = builder.create();
+                })
+                .create();
 
         dialog.getListView().setAdapter(new ArrayAdapter<>(this,
                 R.layout.invite_friends, friends));
         dialog.getListView().setItemsCanFocus(false);
+
+        // Setting divider with gradient. Based on: http://stackoverflow.com/questions/2372415/how-to-change-color-of-android-listview-separator-line
+        int[] colors = {0, 0xFF000000, 0};
+        dialog.getListView().setDivider(new GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, colors));
+        dialog.getListView().setDividerHeight(1);
+
         dialog.getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        dialog.getListView().setItemsCanFocus(false);
+
         dialog.getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(GroupActivity.this, "clicked " + position, Toast.LENGTH_SHORT).show();
+                Friend f = (Friend) parent.getItemAtPosition(position);
+                CheckBox box = (CheckBox) parent.findViewById(R.id.invite_friends_checkbox);
+
+                if (box != null) {
+                    if (box.isChecked()) {
+                        friendsToBeInvited.remove(f);
+                        box.setChecked(false);
+                    } else {
+                        friendsToBeInvited.add(f);
+                        box.setChecked(true);
+                    }
+                }
+
+                Toast.makeText(getApplicationContext(),"Checked " + box.isChecked(), Toast.LENGTH_SHORT).show();
             }
         });
+
         dialog.show();
 
 
