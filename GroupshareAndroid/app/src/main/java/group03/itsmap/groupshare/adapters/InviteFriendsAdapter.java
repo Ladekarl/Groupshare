@@ -1,4 +1,4 @@
-package group03.itsmap.groupshare.adapter;
+package group03.itsmap.groupshare.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -9,16 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.InputStream;
 import java.util.List;
 
 import group03.itsmap.groupshare.R;
-import group03.itsmap.groupshare.model.Friend;
+import group03.itsmap.groupshare.models.Friend;
 
 public class InviteFriendsAdapter extends ArrayAdapter<Friend> {
 

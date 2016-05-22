@@ -1,23 +1,20 @@
-package group03.itsmap.groupshare.adapter;
+package group03.itsmap.groupshare.adapters;
 
 import android.content.Context;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
 import group03.itsmap.groupshare.R;
-import group03.itsmap.groupshare.model.ToDoItem;
+import group03.itsmap.groupshare.models.ToDoItem;
 
 public class ToDoListActivityAdapter extends ArrayAdapter<ToDoItem> {
 
@@ -50,18 +47,20 @@ public class ToDoListActivityAdapter extends ArrayAdapter<ToDoItem> {
                 } else {
                     descriptionTextView.setPaintFlags(descriptionTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 }
-                CheckBox itemChecked = (CheckBox) v.findViewById(R.id.todo_item_checkBox);
+                final CheckBox itemChecked = (CheckBox) v.findViewById(R.id.todo_item_checkBox);
                 if (itemChecked != null) {
                     itemChecked.setChecked(item.getChecked());
-                    itemChecked.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    itemChecked.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                            if (isChecked) {
+                        public void onClick(View v) {
+                            if (itemChecked.isChecked()) {
                                 descriptionTextView.setPaintFlags(descriptionTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                                 item.setChecked(true);
+                                notifyDataSetChanged();
                             } else {
                                 descriptionTextView.setPaintFlags(descriptionTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                                 item.setChecked(false);
+                                notifyDataSetChanged();
                             }
                         }
                     });

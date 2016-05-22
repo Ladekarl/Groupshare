@@ -1,7 +1,6 @@
-package group03.itsmap.groupshare;
+package group03.itsmap.groupshare.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,8 +15,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import group03.itsmap.groupshare.R;
 
 public class LoginActivity extends AppCompatActivity {
 

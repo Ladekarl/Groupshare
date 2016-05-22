@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="group03.itsmap.groupshare.GroupActivity">
+    tools:context=".activities.GroupActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/group_toolbar"
@@ -14,11 +14,11 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/AppTheme.Toolbar" />
 
-    <fragment android:name="group03.itsmap.groupshare.ToDoFragment"
-        android:id="@+id/viewer"
+    <RelativeLayout
+        android:id="@+id/act_fragment_toDo"
         android:layout_width="match_parent"
-        android:layout_below="@id/group_toolbar"
         android:layout_height="150dp"
-        tools:layout="@layout/fragment_todo" />
+        android:layout_below="@id/group_toolbar"
+        android:orientation="horizontal" />
 
 </RelativeLayout>

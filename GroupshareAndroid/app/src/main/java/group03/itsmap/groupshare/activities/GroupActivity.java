@@ -30,6 +30,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import group03.itsmap.groupshare.R;
+import group03.itsmap.groupshare.adapters.InviteFriendsAdapter;
+import group03.itsmap.groupshare.fragments.ToDoFragment;
+import group03.itsmap.groupshare.models.Friend;
+import group03.itsmap.groupshare.models.Group;
 import group03.itsmap.groupshare.adapter.InviteFriendsAdapter;
 import group03.itsmap.groupshare.model.Friend;
 import group03.itsmap.groupshare.model.Group;
@@ -38,6 +43,7 @@ import group03.itsmap.groupshare.utils.IntentKey;
 
 public class GroupActivity extends AppCompatActivity {
 
+    public final static String GROUP_KEY = "group03.itsmap.groupshare.activities.groupactivity.GroupId";
     private Group group;
     private List<Friend> friendsToBeInvited;
 

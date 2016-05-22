@@ -1,4 +1,4 @@
-package group03.itsmap.groupshare.adapter;
+package group03.itsmap.groupshare.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,9 +14,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import group03.itsmap.groupshare.GroupActivity;
+import group03.itsmap.groupshare.activities.GroupActivity;
 import group03.itsmap.groupshare.R;
-import group03.itsmap.groupshare.model.Group;
+import group03.itsmap.groupshare.models.Group;
 import group03.itsmap.groupshare.utils.IntentKey;
 
 public class GroupListAdapter extends ArrayAdapter<Group> {

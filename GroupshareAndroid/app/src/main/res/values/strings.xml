@@ -27,4 +27,6 @@
     <string name="invite_friends">Invite friends</string>
     <string name="delete_group">Delete group</string>
     <string name="invite_friends_success">Successfully added the selected friends to the group!</string>
+    <string name="description">Description</string>
+    <string name="add_todo_item_button">add todo item button</string>
 </resources>
