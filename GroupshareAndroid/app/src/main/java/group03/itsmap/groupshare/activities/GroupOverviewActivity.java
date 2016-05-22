@@ -1,4 +1,4 @@
-package group03.itsmap.groupshare;
+package group03.itsmap.groupshare.activities;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -21,9 +21,10 @@ import com.facebook.GraphResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import group03.itsmap.groupshare.adapter.GroupListAdapter;
-import group03.itsmap.groupshare.model.Friend;
-import group03.itsmap.groupshare.model.Group;
+import group03.itsmap.groupshare.R;
+import group03.itsmap.groupshare.adapters.GroupListAdapter;
+import group03.itsmap.groupshare.models.Friend;
+import group03.itsmap.groupshare.models.Group;
 
 public class GroupOverviewActivity extends AppCompatActivity {
 

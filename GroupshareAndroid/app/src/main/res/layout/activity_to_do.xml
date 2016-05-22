@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/group_list_5"
-    tools:context="group03.itsmap.groupshare.ToDoActivity">
+    tools:context=".activities.ToDoActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/todo_toolbar"
@@ -28,8 +28,57 @@
     <ListView
         android:id="@+id/act_todo_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/todo_act_text"
-        android:layout_margin="20dp" />
+        android:layout_marginBottom="2dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp" />
+
+    <View
+        android:id="@+id/listView_add_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@+id/act_todo_list"
+        android:layout_marginEnd="20dp"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="22dp"
+        android:background="@android:color/black" />
+
+    <ImageButton
+        android:id="@+id/add_todo_item_button"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_below="@id/listView_add_separator"
+        android:layout_marginLeft="34dp"
+        android:layout_marginStart="34dp"
+        android:layout_marginTop="4dp"
+        android:alpha="0.8"
+        android:background="@drawable/white_add_sign"
+        android:contentDescription="@string/add_todo_item_button" />
+
+    <EditText
+        android:id="@+id/add_todo_item_description"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/act_todo_list"
+        android:layout_marginEnd="30dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@+id/add_todo_item_button"
+        android:layout_toRightOf="@+id/add_todo_item_button"
+        android:alpha="0.8"
+        android:background="@null"
+        android:gravity="start|center"
+        android:hint="@string/description"
+        android:inputType="text"
+        android:lines="1"
+        android:maxLength="35"
+        android:textColor="@android:color/white" />
 
 </RelativeLayout>

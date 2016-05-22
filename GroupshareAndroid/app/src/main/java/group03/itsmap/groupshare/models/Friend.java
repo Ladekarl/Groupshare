@@ -1,4 +1,4 @@
-package group03.itsmap.groupshare.model;
+package group03.itsmap.groupshare.models;
 
 public class Friend {
 

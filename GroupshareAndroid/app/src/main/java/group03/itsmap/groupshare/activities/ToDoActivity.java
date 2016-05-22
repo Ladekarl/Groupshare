@@ -1,4 +1,4 @@
-package group03.itsmap.groupshare;
+package group03.itsmap.groupshare.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,20 +8,23 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import group03.itsmap.groupshare.adapter.ToDoListActivityAdapter;
-import group03.itsmap.groupshare.model.ToDoItem;
+import group03.itsmap.groupshare.R;
+import group03.itsmap.groupshare.adapters.ToDoListActivityAdapter;
+import group03.itsmap.groupshare.models.ToDoItem;
 
 public class ToDoActivity extends AppCompatActivity {
 
     private ArrayList<ToDoItem> toDoList;
     private ToDoListActivityAdapter toDoListActivityAdapter;
     private ListView toDoListView;
+    private EditText addToDoItemDescription;
+    private ImageButton addToDoItemButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,13 +73,24 @@ public class ToDoActivity extends AppCompatActivity {
             });
         }
 
+        addToDoItemDescription = (EditText) findViewById(R.id.add_todo_item_description);
+        addToDoItemButton = (ImageButton) findViewById(R.id.add_todo_item_button);
+
+        addToDoItemButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ToDoItem item = new ToDoItem(addToDoItemDescription.getText().toString(), false);
+                toDoList.add(item);
+                toDoListActivityAdapter.notifyDataSetChanged();
+            }
+        });
+
         toDoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (view.getId() == R.id.todo_item_delete) {
                     ToDoItem item = (ToDoItem) view.getTag();
                     toDoList.remove(item);
-                    toDoListActivityAdapter.remove(item);
                     toDoListActivityAdapter.notifyDataSetChanged();
                 }
             }

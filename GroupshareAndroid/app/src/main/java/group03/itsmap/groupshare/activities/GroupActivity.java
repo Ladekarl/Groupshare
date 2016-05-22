@@ -1,5 +1,8 @@
-package group03.itsmap.groupshare;
+package group03.itsmap.groupshare.activities;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -15,7 +18,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -30,13 +32,16 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import group03.itsmap.groupshare.adapter.InviteFriendsAdapter;
-import group03.itsmap.groupshare.model.Friend;
-import group03.itsmap.groupshare.model.Group;
+import group03.itsmap.groupshare.R;
+import group03.itsmap.groupshare.adapters.InviteFriendsAdapter;
+import group03.itsmap.groupshare.fragments.ToDoFragment;
+import group03.itsmap.groupshare.models.Friend;
+import group03.itsmap.groupshare.models.Group;
 import group03.itsmap.groupshare.utils.IntentKey;
 
 public class GroupActivity extends AppCompatActivity {
 
+    public final static String GROUP_KEY = "group03.itsmap.groupshare.activities.groupactivity.GroupId";
     private Group group;
 
     @Override
@@ -66,8 +71,16 @@ public class GroupActivity extends AppCompatActivity {
                 }
             });
         }
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(GROUP_KEY, group);
+        ToDoFragment toDoFragment = new ToDoFragment();
+        toDoFragment.setArguments(bundle);
+        fragmentTransaction.add(R.id.act_fragment_toDo, toDoFragment);
+        fragmentTransaction.commit();
 
-        // TODO: Create Calendar and Todo for chosen group
+        // TODO: Create calendar for chosen group
     }
 
     @Override
@@ -169,7 +182,7 @@ public class GroupActivity extends AppCompatActivity {
                     }
                 }
 
-                Toast.makeText(getApplicationContext(),"Checked " + box.isChecked(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Checked " + box.isChecked(), Toast.LENGTH_SHORT).show();
             }
         });
 
