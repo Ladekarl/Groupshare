@@ -33,11 +33,13 @@ import java.util.List;
 import group03.itsmap.groupshare.adapter.InviteFriendsAdapter;
 import group03.itsmap.groupshare.model.Friend;
 import group03.itsmap.groupshare.model.Group;
+import group03.itsmap.groupshare.utils.FacebookUtil;
 import group03.itsmap.groupshare.utils.IntentKey;
 
 public class GroupActivity extends AppCompatActivity {
 
     private Group group;
+    private List<Friend> friendsToBeInvited;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class GroupActivity extends AppCompatActivity {
 
         Toolbar groupToolbar = (Toolbar) findViewById(R.id.group_toolbar);
         group = (Group) getIntent().getSerializableExtra(IntentKey.GroupActivityIntent);
+        friendsToBeInvited = new ArrayList<>();
         setSupportActionBar(groupToolbar);
 
         ActionBar supportActionBar = getSupportActionBar();
@@ -99,13 +102,7 @@ public class GroupActivity extends AppCompatActivity {
                         for (int i = 0; i < objects.length(); i++) {
                             try {
                                 JSONObject object = objects.getJSONObject(i);
-                                Friend friend = new Friend();
-                                friend.setFacebookId(Long.valueOf((String) object.get("id")));
-                                friend.setName((String) object.get("name"));
-                                JSONObject picture = (JSONObject) object.get("picture");
-                                JSONObject data = (JSONObject) picture.get("data");
-                                friend.setPictureUrl((String) data.get("url"));
-                                friends.add(friend);
+                                friends.add(FacebookUtil.jsonObjectToFriend(object));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -121,7 +118,6 @@ public class GroupActivity extends AppCompatActivity {
 
     // Dialog based on http://stackoverflow.com/questions/10932832/multiple-choice-alertdialog-with-custom-adapter
     private void showDialogForFriends(List<Friend> friends) {
-        final List<Friend> friendsToBeInvited = new ArrayList<>();
 
         ArrayAdapter adapter = new InviteFriendsAdapter(GroupActivity.this, R.layout.invite_friends, friends);
         AlertDialog dialog = new AlertDialog.Builder(GroupActivity.this)
@@ -130,30 +126,38 @@ public class GroupActivity extends AppCompatActivity {
                 .setPositiveButton("Invite friends", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        group.addFriends(friendsToBeInvited);
 
+                        if (friendsToBeInvited.size() >= 1) {
+                            Toast.makeText(GroupActivity.this, R.string.invite_friends_success, Toast.LENGTH_SHORT).show();
+                        }
+
+                        friendsToBeInvited.clear();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Log.d("LOG", "cancel");
+                        friendsToBeInvited.clear();
                     }
                 })
                 .create();
 
-        dialog.getListView().setAdapter(new ArrayAdapter<>(this,
-                R.layout.invite_friends, friends));
-        dialog.getListView().setItemsCanFocus(false);
+        ListView listView = dialog.getListView();
+
+        listView.setAdapter(new ArrayAdapter<>(this, R.layout.invite_friends, friends));
+        listView.setItemsCanFocus(false);
 
         // Setting divider with gradient. Based on: http://stackoverflow.com/questions/2372415/how-to-change-color-of-android-listview-separator-line
         int[] colors = {0, 0xFF000000, 0};
-        dialog.getListView().setDivider(new GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, colors));
-        dialog.getListView().setDividerHeight(1);
+        listView.setDivider(new GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, colors));
+        listView.setDividerHeight(1);
 
-        dialog.getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        dialog.getListView().setItemsCanFocus(false);
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        listView.setItemsCanFocus(false);
 
-        dialog.getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Friend f = (Friend) parent.getItemAtPosition(position);
@@ -168,13 +172,9 @@ public class GroupActivity extends AppCompatActivity {
                         box.setChecked(true);
                     }
                 }
-
-                Toast.makeText(getApplicationContext(),"Checked " + box.isChecked(), Toast.LENGTH_SHORT).show();
             }
         });
 
         dialog.show();
-
-
     }
 }

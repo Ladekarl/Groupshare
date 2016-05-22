@@ -38,4 +38,8 @@ public class Group implements Serializable {
     public void setFriends(List<Friend> friends) {
         this.friends = friends;
     }
+
+    public void addFriends(List<Friend> friends) {
+        friends.addAll(friends);
+    }
 }

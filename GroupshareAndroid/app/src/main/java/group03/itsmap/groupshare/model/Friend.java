@@ -1,6 +1,8 @@
 package group03.itsmap.groupshare.model;
 
-public class Friend {
+import java.io.Serializable;
+
+public class Friend implements Serializable {
 
     private long facebookId;
     private String Name;
