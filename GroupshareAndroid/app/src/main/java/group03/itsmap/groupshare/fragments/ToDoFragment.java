@@ -16,8 +16,8 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import group03.itsmap.groupshare.GroupActivity;
 import group03.itsmap.groupshare.R;
-import group03.itsmap.groupshare.activities.GroupActivity;
 import group03.itsmap.groupshare.activities.ToDoActivity;
 import group03.itsmap.groupshare.adapters.ToDoListFragmentAdapter;
 import group03.itsmap.groupshare.models.Group;

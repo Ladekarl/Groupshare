@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -30,14 +29,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import group03.itsmap.groupshare.R;
 import group03.itsmap.groupshare.adapters.InviteFriendsAdapter;
-import group03.itsmap.groupshare.fragments.ToDoFragment;
 import group03.itsmap.groupshare.models.Friend;
 import group03.itsmap.groupshare.models.Group;
-import group03.itsmap.groupshare.adapter.InviteFriendsAdapter;
-import group03.itsmap.groupshare.model.Friend;
-import group03.itsmap.groupshare.model.Group;
 import group03.itsmap.groupshare.utils.FacebookUtil;
 import group03.itsmap.groupshare.utils.IntentKey;
 
