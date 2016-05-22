@@ -25,6 +25,7 @@ import group03.itsmap.groupshare.R;
 import group03.itsmap.groupshare.adapters.GroupListAdapter;
 import group03.itsmap.groupshare.models.Friend;
 import group03.itsmap.groupshare.models.Group;
+import group03.itsmap.groupshare.utils.FacebookUtil;
 
 public class GroupOverviewActivity extends AppCompatActivity {
 
@@ -104,26 +105,22 @@ public class GroupOverviewActivity extends AppCompatActivity {
                     }
                 });
         Bundle parameters = new Bundle();
-        parameters.putString("fields", "id");
+        parameters.putString("fields", "id, name, picture");
         request.setParameters(parameters);
         request.executeAsync();
     }
 
     private void saveGroup(String groupName, JSONObject object) {
-        Long id = null;
-
+        Friend groupMaker = null;
         try {
-            String idString = (String) object.get("id");
-            id = Long.valueOf(idString);
-
-            Friend groupCreater = new Friend();
+            groupMaker = FacebookUtil.jsonObjectToFriend(object);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        if (id != null) {
+        if (groupMaker != null) {
             // TODO ADD GROUP TO SERVER
-            groupListAdapter.add(new Group(groupName));
+            groupListAdapter.add(new Group(groupName, groupMaker));
         } else {
             Toast.makeText(GroupOverviewActivity.this, R.string.save_group_error, Toast.LENGTH_SHORT).show();
         }

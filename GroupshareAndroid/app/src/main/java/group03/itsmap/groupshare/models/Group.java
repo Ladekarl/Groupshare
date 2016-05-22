@@ -39,7 +39,7 @@ public class Group implements Serializable {
         this.friends = friends;
     }
 
-    public void addFriends(List<Friend> friends) {
-        friends.addAll(friends);
+    public void addFriends(List<Friend> friendsToBeAdded) {
+        this.friends.addAll(friendsToBeAdded);
     }
 }
