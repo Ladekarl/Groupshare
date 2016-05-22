@@ -96,18 +96,22 @@ public class GroupOverviewActivity extends AppCompatActivity {
     }
 
     private void createGroup(final String groupName) {
-        GraphRequest request = GraphRequest.newMeRequest(
-                AccessToken.getCurrentAccessToken(),
-                new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(JSONObject object, GraphResponse response) {
-                        saveGroup(groupName, object);
-                    }
-                });
-        Bundle parameters = new Bundle();
-        parameters.putString("fields", "id, name, picture");
-        request.setParameters(parameters);
-        request.executeAsync();
+        if (FacebookUtil.isNetworkAvailable(getApplicationContext())) {
+            GraphRequest request = GraphRequest.newMeRequest(
+                    AccessToken.getCurrentAccessToken(),
+                    new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted(JSONObject object, GraphResponse response) {
+                            saveGroup(groupName, object);
+                        }
+                    });
+            Bundle parameters = new Bundle();
+            parameters.putString("fields", "id, name, picture");
+            request.setParameters(parameters);
+            request.executeAsync();
+        } else {
+            Toast.makeText(GroupOverviewActivity.this, R.string.no_connection, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void saveGroup(String groupName, JSONObject object) {

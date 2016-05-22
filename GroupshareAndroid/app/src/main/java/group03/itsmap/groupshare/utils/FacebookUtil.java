@@ -1,6 +1,9 @@
 package group03.itsmap.groupshare.utils;
 
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,5 +18,11 @@ public class FacebookUtil {
         JSONObject data = (JSONObject) picture.get("data");
         friend.setPictureUrl((String) data.get("url"));
         return friend;
+    }
+
+    // Based on: http://stackoverflow.com/questions/9570237/android-check-internet-connection
+    public static boolean isNetworkAvailable(final Context context) {
+        final ConnectivityManager connectivityManager = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE));
+        return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected();
     }
 }

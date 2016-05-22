@@ -93,27 +93,31 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     private void inviteFriends() {
-        GraphRequest request = GraphRequest.newMyFriendsRequest(AccessToken.getCurrentAccessToken(),
-                new GraphRequest.GraphJSONArrayCallback() {
-                    @Override
-                    public void onCompleted(JSONArray objects, GraphResponse response) {
-                        List<Friend> friends = new ArrayList<>();
+        if (FacebookUtil.isNetworkAvailable(getApplicationContext())) {
+            GraphRequest request = GraphRequest.newMyFriendsRequest(AccessToken.getCurrentAccessToken(),
+                    new GraphRequest.GraphJSONArrayCallback() {
+                        @Override
+                        public void onCompleted(JSONArray objects, GraphResponse response) {
+                            List<Friend> friends = new ArrayList<>();
 
-                        for (int i = 0; i < objects.length(); i++) {
-                            try {
-                                JSONObject object = objects.getJSONObject(i);
-                                friends.add(FacebookUtil.jsonObjectToFriend(object));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                            for (int i = 0; i < objects.length(); i++) {
+                                try {
+                                    JSONObject object = objects.getJSONObject(i);
+                                    friends.add(FacebookUtil.jsonObjectToFriend(object));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
+                            showDialogForFriends(friends);
                         }
-                        showDialogForFriends(friends);
-                    }
-                });
-        Bundle params = new Bundle();
-        params.putString("fields", "id, name, picture");
-        request.setParameters(params);
-        request.executeAsync();
+                    });
+            Bundle params = new Bundle();
+            params.putString("fields", "id, name, picture");
+            request.setParameters(params);
+            request.executeAsync();
+        } else {
+            Toast.makeText(GroupActivity.this, R.string.no_connection, Toast.LENGTH_SHORT).show();
+        }
     }
 
     // Dialog based on http://stackoverflow.com/questions/10932832/multiple-choice-alertdialog-with-custom-adapter
@@ -145,7 +149,6 @@ public class GroupActivity extends AppCompatActivity {
                 .create();
 
         ListView listView = dialog.getListView();
-
         listView.setAdapter(new ArrayAdapter<>(this, R.layout.invite_friends, friends));
         listView.setItemsCanFocus(false);
 
@@ -174,7 +177,6 @@ public class GroupActivity extends AppCompatActivity {
                 }
             }
         });
-
         dialog.show();
     }
 }
