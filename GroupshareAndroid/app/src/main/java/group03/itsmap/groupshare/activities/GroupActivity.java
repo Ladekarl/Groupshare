@@ -139,7 +139,7 @@ public class GroupActivity extends AppCompatActivity {
         if (group.getToDoLists().size() == 0) {
             ToDoList toDoList = new ToDoList(1, getString(R.string.todo_list_text));
             group.addToDoList(toDoList);
-            ToDoService.startActionSaveToDoItems(this, toDoList, group.getId(), toDoList.getId(), userId);
+            ToDoService.startActionSaveToDoList(this, toDoList, group.getId(), toDoList.getId(), userId);
         }
         bundle.putParcelable(GROUP_KEY, group);
         bundle.putLong(TODOLIST_ID_KEY, group.getToDoLists().get(0).getId());

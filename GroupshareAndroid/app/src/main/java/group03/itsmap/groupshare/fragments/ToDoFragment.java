@@ -14,8 +14,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.lang.reflect.Field;
-
 import group03.itsmap.groupshare.R;
 import group03.itsmap.groupshare.activities.GroupActivity;
 import group03.itsmap.groupshare.activities.ToDoActivity;
@@ -70,9 +68,9 @@ public class ToDoFragment extends Fragment {
             if (groupVar != null) {
                 group = groupVar;
                 IntentFilter toDoItemIntentFilter = new IntentFilter(
-                        ToDoService.GET_TODO_ITEMS_BROADCAST_INTENT + group.getId() + toDoListId + userId);
+                        ToDoService.GET_TODO_LIST_BROADCAST_INTENT + group.getId() + toDoListId + userId);
 
-                ToDoItemReceiver toDoItemReceiver = new ToDoItemReceiver();
+                ToDoListReceiver toDoItemReceiver = new ToDoListReceiver();
                 LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
                         toDoItemReceiver,
                         toDoItemIntentFilter);
@@ -84,32 +82,32 @@ public class ToDoFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        getToDoItemsFromService();
+        getToDoListFromService();
     }
 
     @Override
     public void onPause() {
-        saveToDoItems();
+        saveToDoList();
         super.onPause();
     }
 
-    private void saveToDoItems() {
-        ToDoService.startActionSaveToDoItems(getActivity(), toDoList, group.getId(), toDoListId, userId);
+    private void saveToDoList() {
+        ToDoService.startActionSaveToDoList(getActivity(), toDoList, group.getId(), toDoListId, userId);
     }
 
 
-    private void getToDoItemsFromService() {
-        ToDoService.startActionGetToDoItems(getActivity(), group.getId(), toDoListId, userId);
+    private void getToDoListFromService() {
+        ToDoService.startActionGetToDoList(getActivity(), group.getId(), toDoListId, userId);
     }
 
-    private class ToDoItemReceiver extends BroadcastReceiver {
-        private ToDoItemReceiver() {
+    private class ToDoListReceiver extends BroadcastReceiver {
+        private ToDoListReceiver() {
         }
 
         public void onReceive(Context context, Intent intent) {
-            ToDoList items = intent.getParcelableExtra(ToDoService.EXTRA_TODO_ITEMS);
-            if (items == null) return;
-            toDoList = items;
+            ToDoList list = intent.getParcelableExtra(ToDoService.EXTRA_TODO_LIST);
+            if (list == null) return;
+            toDoList = list;
             toDoListTitleText.setText(toDoList.getTitle());
             if (toDoListFragmentAdapter == null) return;
             refreshAdapter();
