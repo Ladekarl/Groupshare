@@ -51,6 +51,7 @@ public class GroupActivity extends AppCompatActivity {
 
     public final static String GROUP_KEY = "group03.itsmap.groupshare.activities.groupactivity.GroupId";
     public final static String TODOLIST_ID_KEY = "group03.itsmap.groupshare.activities.groupactivity.ToDoListId";
+    private Boolean userDeletedGroup = false;
     private Group group;
     private List<Friend> friendsToBeInvited;
     private String userId;
@@ -101,7 +102,9 @@ public class GroupActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
-        saveGroup();
+        if (!userDeletedGroup) {
+            saveGroup();
+        }
         super.onPause();
     }
 
@@ -118,10 +121,37 @@ public class GroupActivity extends AppCompatActivity {
             case R.id.invite_friends_menu_item:
                 inviteFriends();
                 break;
+            case R.id.delete_group_menu_item:
+                deleteGroup();
+                break;
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteGroup() {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        GroupService.startActionDeleteSingleGroup(GroupActivity.this, group.getId(), userId);
+                        for (ToDoList toDoList : group.getToDoLists()) {
+                            ToDoService.startActionDeleteToDoList(GroupActivity.this, group.getId(), toDoList.getId(), userId);
+                        }
+                        userDeletedGroup = true;
+                        finish();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.are_you_sure)).setPositiveButton(getString(R.string.yes), dialogClickListener)
+                .setNegativeButton(getString(R.string.no), dialogClickListener).show();
     }
 
     private void getGroupFromService() {

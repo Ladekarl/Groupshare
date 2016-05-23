@@ -1,6 +1,7 @@
 package group03.itsmap.groupshare.services;
 
 import android.app.IntentService;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,13 +13,16 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 
+import group03.itsmap.groupshare.activities.GroupActivity;
 import group03.itsmap.groupshare.models.Group;
+import group03.itsmap.groupshare.models.ToDoList;
 
 public class GroupService extends IntentService {
     private static final String ACTION_GET_GROUPS = "group03.itsmap.groupshare.services.GroupService.action.getGroups";
     private static final String ACTION_GET_SINGLE_GROUP = "group03.itsmap.groupshare.services.GroupService.action.getGroup";
     private static final String ACTION_SAVE_GROUPS = "group03.itsmap.groupshare.services.GroupService.action.saveGroups";
     private static final String ACTION_SAVE_SINGLE_GROUP = "group03.itsmap.groupshare.services.GroupService.action.saveGroup";
+    private static final String ACTION_DELETE_SINGLE_GROUP = "group03.itsmap.groupshare.services.GroupService.action.deleteGroup";
     public static final String EXTRA_GROUPS = "group03.itsmap.groupshare.services.GroupService.extra.Groups";
     public static final String EXTRA_SINGLE_GROUP = "group03.itsmap.groupshare.services.GroupService.extra.Group";
     public static final String EXTRA_USER_ID = "group03.itsmap.groupshare.services.GroupService.extra.UserId";
@@ -64,6 +68,14 @@ public class GroupService extends IntentService {
         context.startService(intent);
     }
 
+    public static void startActionDeleteSingleGroup(Context context, Long groupId, String userId) {
+        Intent intent = new Intent(context, GroupService.class);
+        intent.setAction(ACTION_DELETE_SINGLE_GROUP);
+        intent.putExtra(EXTRA_USER_ID, userId);
+        intent.putExtra(EXTRA_GROUP_ID, groupId);
+        context.startService(intent);
+    }
+
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -85,6 +97,10 @@ public class GroupService extends IntentService {
                 final Long groupId = intent.getLongExtra(EXTRA_GROUP_ID, 0);
                 final Group group = intent.getParcelableExtra(EXTRA_SINGLE_GROUP);
                 handleActionSaveSingleGroup(group, groupId, userId);
+            } else if (ACTION_DELETE_SINGLE_GROUP.equals(action)) {
+                final String userId = intent.getStringExtra(EXTRA_USER_ID);
+                final Long groupId = intent.getLongExtra(EXTRA_GROUP_ID, 0);
+                handleActionDeleteSingleGroup(groupId, userId);
             }
         }
     }
@@ -154,6 +170,30 @@ public class GroupService extends IntentService {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = sharedPref.edit();
         Gson gson = new Gson();
+        String groupsJson = gson.toJson(groups);
+        editor.putString(GROUPS_SHARED_PREFERENCES + userId, groupsJson);
+        editor.apply();
+    }
+
+    private void handleActionDeleteSingleGroup(Long groupId, String userId) {
+        ArrayList<Group> groups;
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String jsonString = sharedPref.getString(GROUPS_SHARED_PREFERENCES + userId, null);
+        Gson gson = new Gson();
+        groups = gson.fromJson(jsonString, new TypeToken<ArrayList<Group>>() {
+        }.getType());
+        if (groups != null) {
+            Group groupToRemove = null;
+            for (Group retrievedGroup : groups) {
+                if (retrievedGroup.getId() == groupId) {
+                    groupToRemove = retrievedGroup;
+                }
+            }
+            if (groupToRemove != null) {
+                groups.remove(groupToRemove);
+            }
+        }
+        SharedPreferences.Editor editor = sharedPref.edit();
         String groupsJson = gson.toJson(groups);
         editor.putString(GROUPS_SHARED_PREFERENCES + userId, groupsJson);
         editor.apply();
