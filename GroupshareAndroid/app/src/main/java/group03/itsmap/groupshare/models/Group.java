@@ -10,6 +10,7 @@ public class Group implements Parcelable {
 
     private String name;
     private ArrayList<Friend> friends;
+    private ArrayList<ToDoList> toDoLists;
     private long id;
 
     public Group() {
@@ -19,13 +20,17 @@ public class Group implements Parcelable {
         this.id = id;
         this.name = name;
         friends = new ArrayList<>();
+        toDoLists = new ArrayList<>();
     }
 
-    public Group(long id, String name, Friend friend) {
-        this.id = id;
-        this.name = name;
-        friends = new ArrayList<>();
-        friends.add(friend);
+    public Group(long id, String name, ArrayList<Friend> friends) {
+        this(id, name);
+        this.friends = friends;
+    }
+
+    public Group(long id, String name, ArrayList<Friend> friends, ArrayList<ToDoList> toDoLists) {
+        this(id, name, friends);
+        this.toDoLists = toDoLists;
     }
 
     public long getId() {
@@ -56,11 +61,25 @@ public class Group implements Parcelable {
         this.friends.addAll(friendsToBeAdded);
     }
 
+    public List<ToDoList> getToDoLists() {
+        return toDoLists;
+    }
+
+    public void setToDoLists(ArrayList<ToDoList> toDoLists) {
+        this.toDoLists = toDoLists;
+    }
+
+    public void addToDoList(ToDoList toDoList) {
+        this.toDoLists.add(toDoList);
+    }
+
     public Group(Parcel parcel) {
         name = parcel.readString();
         id = parcel.readLong();
         friends = new ArrayList<>();
+        toDoLists = new ArrayList<>();
         parcel.readTypedList(friends, Friend.CREATOR);
+        parcel.readTypedList(toDoLists, ToDoList.CREATOR);
     }
 
 
@@ -74,6 +93,7 @@ public class Group implements Parcelable {
         dest.writeString(name);
         dest.writeLong(id);
         dest.writeTypedList(friends);
+        dest.writeTypedList(toDoLists);
     }
 
     public static Creator<Group> CREATOR = new Creator<Group>() {

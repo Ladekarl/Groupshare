@@ -17,32 +17,34 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-import java.util.ArrayList;
-
 import group03.itsmap.groupshare.R;
 import group03.itsmap.groupshare.adapters.ToDoListActivityAdapter;
 import group03.itsmap.groupshare.models.Group;
 import group03.itsmap.groupshare.models.ToDoItem;
+import group03.itsmap.groupshare.models.ToDoList;
 import group03.itsmap.groupshare.services.ToDoService;
 import group03.itsmap.groupshare.utils.FacebookUtil;
 
 public class ToDoActivity extends AppCompatActivity {
 
-    private ArrayList<ToDoItem> toDoList;
+    private ToDoList toDoList;
     private ToDoListActivityAdapter toDoListActivityAdapter;
     private ListView toDoListView;
     private EditText addToDoItemDescription;
     private ImageButton addToDoItemButton;
     private String userId;
     private Group group;
+    private long toDoListId;
+    private EditText todoTitleText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_to_do);
         userId = FacebookUtil.getFacebookUserId(getApplicationContext());
-        toDoList = new ArrayList<>();
+        toDoList = new ToDoList();
         group = getIntent().getParcelableExtra("Group");
+        toDoListId = getIntent().getLongExtra("ToDoListId", 0);
         toDoListActivityAdapter = new ToDoListActivityAdapter(this, R.layout.todo_list_item);
         toDoListView = (ListView) findViewById(R.id.act_todo_list);
         if (toDoListView != null) {
@@ -76,7 +78,7 @@ public class ToDoActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     ToDoItem item = (ToDoItem) v.getTag();
-                    toDoList.remove(item);
+                    toDoList.getItems().remove(item);
                     refreshAdapter();
                 }
             });
@@ -94,7 +96,7 @@ public class ToDoActivity extends AppCompatActivity {
                 }
                 ToDoItem item = new ToDoItem(addToDoItemDescription.getText().toString(), false);
                 addToDoItemDescription.setText("");
-                toDoList.add(item);
+                toDoList.getItems().add(item);
                 refreshAdapter();
             }
         });
@@ -104,7 +106,7 @@ public class ToDoActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (view.getId() == R.id.todo_item_delete) {
                     ToDoItem item = (ToDoItem) view.getTag();
-                    toDoList.remove(item);
+                    toDoList.getItems().remove(item);
                     refreshAdapter();
                 }
             }
@@ -112,13 +114,16 @@ public class ToDoActivity extends AppCompatActivity {
 
         if (group != null) {
             IntentFilter toDoItemIntentFilter = new IntentFilter(
-                    ToDoService.GET_TODO_ITEMS_BROADCAST_INTENT + group.getId() + userId);
+                    ToDoService.GET_TODO_ITEMS_BROADCAST_INTENT + group.getId() + toDoListId + userId);
 
             ToDoItemReceiver toDoItemReceiver = new ToDoItemReceiver();
             LocalBroadcastManager.getInstance(this).registerReceiver(
                     toDoItemReceiver,
                     toDoItemIntentFilter);
         }
+
+        todoTitleText = (EditText) findViewById(R.id.todo_act_text);
+        todoTitleText.setText(toDoList.getTitle());
     }
 
     @Override
@@ -129,16 +134,17 @@ public class ToDoActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
+        toDoList.setTitle(todoTitleText.getText().toString());
         saveToDoItems();
         super.onPause();
     }
 
     private void saveToDoItems() {
-        ToDoService.startActionSaveToDoItems(this, toDoList, group.getId(), userId);
+        ToDoService.startActionSaveToDoItems(this, toDoList, group.getId(), toDoListId, userId);
     }
 
     private void getToDoItemsFromService() {
-        ToDoService.startActionGetToDoItems(this, group.getId(), userId);
+        ToDoService.startActionGetToDoItems(this, group.getId(), toDoListId, userId);
     }
 
     private class ToDoItemReceiver extends BroadcastReceiver {
@@ -146,10 +152,10 @@ public class ToDoActivity extends AppCompatActivity {
         }
 
         public void onReceive(Context context, Intent intent) {
-            ArrayList<ToDoItem> items = intent.getParcelableArrayListExtra(ToDoService.EXTRA_TODO_ITEMS);
+            ToDoList items = intent.getParcelableExtra(ToDoService.EXTRA_TODO_ITEMS);
             if (items == null) return;
-            if (toDoList.containsAll(items)) return;
             toDoList = items;
+            todoTitleText.setText(toDoList.getTitle());
             if (toDoListActivityAdapter == null) return;
             refreshAdapter();
         }
@@ -157,7 +163,7 @@ public class ToDoActivity extends AppCompatActivity {
 
     private void refreshAdapter() {
         toDoListActivityAdapter.clear();
-        toDoListActivityAdapter.addAll(toDoList);
+        toDoListActivityAdapter.addAll(toDoList.getItems());
         toDoListActivityAdapter.notifyDataSetChanged();
     }
 

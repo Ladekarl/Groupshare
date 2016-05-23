@@ -27,4 +27,5 @@
     <string name="description">Description</string>
     <string name="add_todo_item_button">add todo item button</string>
     <string name="no_connection">No connection found</string>
+    <string name="change_this_text">Change this text</string>
 </resources>

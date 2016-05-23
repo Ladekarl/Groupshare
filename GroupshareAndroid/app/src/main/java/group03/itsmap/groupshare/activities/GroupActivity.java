@@ -2,9 +2,14 @@ package group03.itsmap.groupshare.activities;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -36,34 +41,47 @@ import group03.itsmap.groupshare.adapters.InviteFriendsAdapter;
 import group03.itsmap.groupshare.fragments.ToDoFragment;
 import group03.itsmap.groupshare.models.Friend;
 import group03.itsmap.groupshare.models.Group;
+import group03.itsmap.groupshare.models.ToDoList;
+import group03.itsmap.groupshare.services.GroupService;
+import group03.itsmap.groupshare.services.ToDoService;
 import group03.itsmap.groupshare.utils.FacebookUtil;
 import group03.itsmap.groupshare.utils.IntentKey;
 
 public class GroupActivity extends AppCompatActivity {
 
     public final static String GROUP_KEY = "group03.itsmap.groupshare.activities.groupactivity.GroupId";
+    public final static String TODOLIST_ID_KEY = "group03.itsmap.groupshare.activities.groupactivity.ToDoListId";
     private Group group;
     private List<Friend> friendsToBeInvited;
+    private String userId;
+    private ActionBar supportActionBar;
+    private Long groupId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
-
+        userId = FacebookUtil.getFacebookUserId(getApplicationContext());
         Toolbar groupToolbar = (Toolbar) findViewById(R.id.group_toolbar);
-        group = getIntent().getParcelableExtra(IntentKey.GroupActivityIntent);
         friendsToBeInvited = new ArrayList<>();
         setSupportActionBar(groupToolbar);
 
-        ActionBar supportActionBar = getSupportActionBar();
+        groupId = getIntent().getLongExtra(IntentKey.GroupActivityIntent, 0);
+
+        supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
             supportActionBar.setDisplayShowHomeEnabled(true);
             supportActionBar.setDisplayShowTitleEnabled(true);
-            if (group != null) {
-                supportActionBar.setTitle(group.getName());
-            }
         }
+
+        IntentFilter groupIntentFilter = new IntentFilter(
+                GroupService.GET_SINGLE_GROUP_BROADCAST_INTENT + groupId + userId);
+
+        GroupReceiver groupReceiver = new GroupReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                groupReceiver,
+                groupIntentFilter);
 
         if (groupToolbar != null) {
             groupToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -73,17 +91,18 @@ public class GroupActivity extends AppCompatActivity {
                 }
             });
         }
+    }
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(GROUP_KEY, group);
-        ToDoFragment toDoFragment = new ToDoFragment();
-        toDoFragment.setArguments(bundle);
-        fragmentTransaction.add(R.id.act_fragment_toDo, toDoFragment);
-        fragmentTransaction.commit();
+    @Override
+    public void onStart() {
+        super.onStart();
+        getGroupFromService();
+    }
 
-        // TODO: Create Calendar and Todo for chosen group
+    @Override
+    public void onPause() {
+        saveGroup();
+        super.onPause();
     }
 
     @Override
@@ -103,6 +122,35 @@ public class GroupActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void getGroupFromService() {
+        GroupService.startActionGetSingleGroup(this, groupId, userId);
+    }
+
+    private void saveGroup() {
+        GroupService.startActionSaveSingleGroup(this, group, group.getId(), userId);
+    }
+
+    private void initGroupView() {
+        if (isFinishing()) return;
+        // ADDING TODOLIST TO GROUP Todo: Make this a manual decision
+        Bundle bundle = new Bundle();
+        if (group.getToDoLists().size() == 0) {
+            ToDoList toDoList = new ToDoList(1, getString(R.string.todo_list_text));
+            group.addToDoList(toDoList);
+            ToDoService.startActionSaveToDoItems(this, toDoList, group.getId(), toDoList.getId(), userId);
+        }
+        bundle.putParcelable(GROUP_KEY, group);
+        bundle.putLong(TODOLIST_ID_KEY, group.getToDoLists().get(0).getId());
+        ToDoFragment toDoFragment = new ToDoFragment();
+        toDoFragment.setArguments(bundle);
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.act_fragment_toDo, toDoFragment);
+        fragmentTransaction.commit();
+        fragmentManager.executePendingTransactions();
+        // TODO: Create Calendar and Todo for chosen group
     }
 
     private void inviteFriends() {
@@ -191,5 +239,18 @@ public class GroupActivity extends AppCompatActivity {
             }
         });
         dialog.show();
+    }
+
+    private class GroupReceiver extends BroadcastReceiver {
+        private GroupReceiver() {
+        }
+
+        public void onReceive(Context context, Intent intent) {
+            Group retrievedGroup = intent.getParcelableExtra(GroupService.EXTRA_SINGLE_GROUP);
+            if (retrievedGroup == null) return;
+            group = retrievedGroup;
+            supportActionBar.setTitle(group.getName());
+            initGroupView();
+        }
     }
 }

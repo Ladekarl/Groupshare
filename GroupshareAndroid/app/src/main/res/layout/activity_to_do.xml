@@ -25,9 +25,7 @@
         android:layout_margin="20dp"
         android:background="@null"
         android:gravity="center"
-        android:hint="@string/todo_list_text"
         android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white"
         android:textSize="20sp" />
 
 

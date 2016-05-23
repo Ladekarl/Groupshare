@@ -11,11 +11,18 @@ public class ToDoList implements Parcelable {
     private ArrayList<ToDoItem> items;
 
     public ToDoList() {
+        items = new ArrayList<>();
+    }
+
+    public ToDoList(long id) {
+        this.id = id;
+        items = new ArrayList<>();
     }
 
     public ToDoList(long id, String title) {
         this.id = id;
         this.title = title;
+        items = new ArrayList<>();
     }
 
     public ToDoList(long id, String title, ArrayList<ToDoItem> items) {

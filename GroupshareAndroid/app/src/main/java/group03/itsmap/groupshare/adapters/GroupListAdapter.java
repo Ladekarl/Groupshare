@@ -65,8 +65,8 @@ public class GroupListAdapter extends ArrayAdapter<Group> {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), GroupActivity.class);
-                    // TODO: Create class to for shared Intent keys
-                    intent.putExtra(IntentKey.GroupActivityIntent, group);
+                    // TODO: Create class to for shared Intent k
+                    intent.putExtra(IntentKey.GroupActivityIntent, group.getId());
                     v.getContext().startActivity(intent);
                 }
             });

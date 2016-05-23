@@ -19,6 +19,8 @@ import android.widget.EditText;
 import android.widget.GridView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import group03.itsmap.groupshare.R;
 import group03.itsmap.groupshare.adapters.GroupListAdapter;
@@ -28,7 +30,6 @@ import group03.itsmap.groupshare.utils.FacebookUtil;
 
 public class GroupOverviewActivity extends AppCompatActivity {
 
-    private GridView groupListView;
     private GroupListAdapter groupListAdapter;
     private ArrayList<Group> groupList;
 
@@ -40,9 +41,11 @@ public class GroupOverviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_group_overview);
         userId = FacebookUtil.getFacebookUserId(getApplicationContext());
         groupList = new ArrayList<>();
-        groupListView = (GridView) findViewById(R.id.group_gridView);
+        GridView groupListView = (GridView) findViewById(R.id.group_gridView);
         groupListAdapter = new GroupListAdapter(this, R.layout.group_list_row);
-        groupListView.setAdapter(groupListAdapter);
+        if (groupListView != null) {
+            groupListView.setAdapter(groupListAdapter);
+        }
 
         Toolbar groupOverviewToolbar = (Toolbar) findViewById(R.id.group_overview_toolbar);
         setSupportActionBar(groupOverviewToolbar);
@@ -157,6 +160,12 @@ public class GroupOverviewActivity extends AppCompatActivity {
 
     private void refreshAdapter() {
         groupListAdapter.clear();
+        Collections.sort(groupList, new Comparator<Group>() {
+            @Override
+            public int compare(Group lhs, Group rhs) {
+                return (int) (rhs.getId() - lhs.getId());
+            }
+        });
         groupListAdapter.addAll(groupList);
         groupListAdapter.notifyDataSetChanged();
     }
