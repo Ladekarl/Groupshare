@@ -14,7 +14,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import group03.itsmap.groupshare.GroupActivity;
+import group03.itsmap.groupshare.activities.GroupActivity;
 import group03.itsmap.groupshare.R;
 import group03.itsmap.groupshare.models.Group;
 import group03.itsmap.groupshare.utils.IntentKey;

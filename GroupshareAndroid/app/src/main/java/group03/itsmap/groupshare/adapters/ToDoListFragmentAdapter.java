@@ -20,10 +20,6 @@ public class ToDoListFragmentAdapter extends ArrayAdapter<ToDoItem> {
         super(context, resource);
     }
 
-    public ToDoListFragmentAdapter(Context context, int resource, List<ToDoItem> items) {
-        super(context, resource, items);
-    }
-
     public View getView(int position, View convertView, ViewGroup parent) {
 
         View v = convertView;

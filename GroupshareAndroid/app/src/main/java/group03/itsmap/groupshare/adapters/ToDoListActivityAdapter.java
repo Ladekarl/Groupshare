@@ -22,10 +22,6 @@ public class ToDoListActivityAdapter extends ArrayAdapter<ToDoItem> {
         super(context, resource);
     }
 
-    public ToDoListActivityAdapter(Context context, int resource, List<ToDoItem> items) {
-        super(context, resource, items);
-    }
-
     public View getView(final int position, View convertView, final ViewGroup parent) {
 
         View v = convertView;
@@ -70,14 +66,25 @@ public class ToDoListActivityAdapter extends ArrayAdapter<ToDoItem> {
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    for (int i = 0; i < getCount(); i++) {
-                        parent.getChildAt(i).findViewById(R.id.todo_item_delete).setVisibility(View.INVISIBLE);
+                    ListView lw = (ListView) parent;
+                    for (int i = 0; i <= lw.getLastVisiblePosition(); i++) {
+                        View child = lw.getChildAt(i);
+                        if (child != null) {
+                            View deleteButton = child.findViewById(R.id.todo_item_delete);
+                            if (deleteButton != null) {
+                                deleteButton.setVisibility(View.INVISIBLE);
+                            }
+                        }
                     }
-                    view.findViewById(R.id.todo_item_delete).setVisibility(View.VISIBLE);
+                    View deleteButton = view.findViewById(R.id.todo_item_delete);
+                    if (deleteButton != null) {
+                        deleteButton.setVisibility(View.VISIBLE);
+                    }
                 }
             });
 
             ImageButton removeButton = (ImageButton) v.findViewById(R.id.todo_item_delete);
+            removeButton.setVisibility(View.GONE);
             removeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

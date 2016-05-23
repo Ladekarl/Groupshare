@@ -1,21 +1,21 @@
 package group03.itsmap.groupshare.activities;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
 import group03.itsmap.groupshare.R;
+import group03.itsmap.groupshare.utils.FacebookUtil;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(getApplicationContext());
+        FacebookUtil.initialiseFacebookSdk(getApplicationContext());
         AppEventsLogger.activateApp(getApplication());
         callbackManager = CallbackManager.Factory.create();
 
@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         Handler checkLoginHandler = new Handler();
         checkLoginHandler.postDelayed(new Runnable() {
             public void run() {
-                if(isLoggedIn()) {
+                if (isLoggedIn()) {
                     startGroupOverviewActivity();
                 }
             }
@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public boolean isLoggedIn() {
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        AccessToken accessToken = FacebookUtil.getFacebookAccessToken(getApplicationContext());
         return accessToken != null;
     }
 

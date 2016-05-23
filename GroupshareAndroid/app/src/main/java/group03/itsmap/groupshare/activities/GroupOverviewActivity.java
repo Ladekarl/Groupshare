@@ -1,7 +1,12 @@
 package group03.itsmap.groupshare.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,31 +17,29 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.Toast;
 
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.ArrayList;
 
 import group03.itsmap.groupshare.R;
 import group03.itsmap.groupshare.adapters.GroupListAdapter;
-import group03.itsmap.groupshare.models.Friend;
 import group03.itsmap.groupshare.models.Group;
+import group03.itsmap.groupshare.services.GroupService;
 import group03.itsmap.groupshare.utils.FacebookUtil;
 
 public class GroupOverviewActivity extends AppCompatActivity {
 
     private GridView groupListView;
     private GroupListAdapter groupListAdapter;
+    private ArrayList<Group> groupList;
+
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_overview);
-
+        userId = FacebookUtil.getFacebookUserId(getApplicationContext());
+        groupList = new ArrayList<>();
         groupListView = (GridView) findViewById(R.id.group_gridView);
         groupListAdapter = new GroupListAdapter(this, R.layout.group_list_row);
         groupListView.setAdapter(groupListAdapter);
@@ -46,6 +49,14 @@ public class GroupOverviewActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
+
+        IntentFilter groupIntentFilter = new IntentFilter(
+                GroupService.GET_GROUPS_BROADCAST_INTENT + userId);
+
+        GroupReceiver groupReceiver = new GroupReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                groupReceiver,
+                groupIntentFilter);
     }
 
     @Override
@@ -66,6 +77,27 @@ public class GroupOverviewActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getGroupsFromService();
+    }
+
+    @Override
+    public void onPause() {
+        saveGroups();
+        super.onPause();
+    }
+
+
+    private void saveGroups() {
+        GroupService.startActionSaveGroups(this, groupList, userId);
+    }
+
+    private void getGroupsFromService() {
+        GroupService.startActionGetGroups(this, userId);
     }
 
 
@@ -96,38 +128,36 @@ public class GroupOverviewActivity extends AppCompatActivity {
     }
 
     private void createGroup(final String groupName) {
-        if (FacebookUtil.isNetworkAvailable(getApplicationContext())) {
-            GraphRequest request = GraphRequest.newMeRequest(
-                    AccessToken.getCurrentAccessToken(),
-                    new GraphRequest.GraphJSONObjectCallback() {
-                        @Override
-                        public void onCompleted(JSONObject object, GraphResponse response) {
-                            saveGroup(groupName, object);
-                        }
-                    });
-            Bundle parameters = new Bundle();
-            parameters.putString("fields", "id, name, picture");
-            request.setParameters(parameters);
-            request.executeAsync();
-        } else {
-            Toast.makeText(GroupOverviewActivity.this, R.string.no_connection, Toast.LENGTH_SHORT).show();
+        long largestId = 0;
+        if (groupList != null) {
+            for (Group group : groupList) {
+                if (group.getId() > largestId) {
+                    largestId = group.getId();
+                }
+            }
+        }
+        Group newGroup = new Group(largestId + 1, groupName);
+        groupList.add(newGroup);
+        refreshAdapter();
+    }
+
+    private class GroupReceiver extends BroadcastReceiver {
+        private GroupReceiver() {
+        }
+
+        public void onReceive(Context context, Intent intent) {
+            ArrayList<Group> groups = intent.getParcelableArrayListExtra(GroupService.EXTRA_GROUPS);
+            if (groups == null) return;
+            if (groupList.containsAll(groups)) return;
+            groupList = groups;
+            if (groupListAdapter == null) return;
+            refreshAdapter();
         }
     }
 
-    private void saveGroup(String groupName, JSONObject object) {
-        Friend groupMaker = null;
-        try {
-            groupMaker = FacebookUtil.jsonObjectToFriend(object);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        if (groupMaker != null) {
-            // TODO ADD GROUP TO SERVER
-            groupListAdapter.add(new Group(groupName, groupMaker));
-        } else {
-            Toast.makeText(GroupOverviewActivity.this, R.string.save_group_error, Toast.LENGTH_SHORT).show();
-        }
-
+    private void refreshAdapter() {
+        groupListAdapter.clear();
+        groupListAdapter.addAll(groupList);
+        groupListAdapter.notifyDataSetChanged();
     }
 }

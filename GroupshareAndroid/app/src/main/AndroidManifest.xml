@@ -43,12 +43,15 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".GroupActivity" />
+        <activity android:name=".activities.GroupActivity" />
         <activity android:name=".activities.ToDoActivity" />
 
         <service
             android:name=".services.ToDoService"
             android:exported="false" />
+        <service
+            android:name=".services.GroupService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

@@ -1,5 +1,7 @@
-package group03.itsmap.groupshare;
+package group03.itsmap.groupshare.activities;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -29,7 +31,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import group03.itsmap.groupshare.R;
 import group03.itsmap.groupshare.adapters.InviteFriendsAdapter;
+import group03.itsmap.groupshare.fragments.ToDoFragment;
 import group03.itsmap.groupshare.models.Friend;
 import group03.itsmap.groupshare.models.Group;
 import group03.itsmap.groupshare.utils.FacebookUtil;
@@ -47,7 +51,7 @@ public class GroupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_group);
 
         Toolbar groupToolbar = (Toolbar) findViewById(R.id.group_toolbar);
-        group = (Group) getIntent().getSerializableExtra(IntentKey.GroupActivityIntent);
+        group = getIntent().getParcelableExtra(IntentKey.GroupActivityIntent);
         friendsToBeInvited = new ArrayList<>();
         setSupportActionBar(groupToolbar);
 
@@ -69,6 +73,15 @@ public class GroupActivity extends AppCompatActivity {
                 }
             });
         }
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(GROUP_KEY, group);
+        ToDoFragment toDoFragment = new ToDoFragment();
+        toDoFragment.setArguments(bundle);
+        fragmentTransaction.add(R.id.act_fragment_toDo, toDoFragment);
+        fragmentTransaction.commit();
 
         // TODO: Create Calendar and Todo for chosen group
     }

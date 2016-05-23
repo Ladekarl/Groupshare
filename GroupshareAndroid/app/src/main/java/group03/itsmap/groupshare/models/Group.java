@@ -1,26 +1,39 @@
 package group03.itsmap.groupshare.models;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Group implements Serializable {
+public class Group implements Parcelable {
 
     private String name;
-    private List<Friend> friends;
+    private ArrayList<Friend> friends;
+    private long id;
 
     public Group() {
     }
 
-    public Group(String name) {
+    public Group(long id, String name) {
+        this.id = id;
         this.name = name;
         friends = new ArrayList<>();
     }
 
-    public Group(String name, Friend friend) {
+    public Group(long id, String name, Friend friend) {
+        this.id = id;
         this.name = name;
         friends = new ArrayList<>();
         friends.add(friend);
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -35,11 +48,45 @@ public class Group implements Serializable {
         return friends;
     }
 
-    public void setFriends(List<Friend> friends) {
+    public void setFriends(ArrayList<Friend> friends) {
         this.friends = friends;
     }
 
     public void addFriends(List<Friend> friendsToBeAdded) {
         this.friends.addAll(friendsToBeAdded);
     }
+
+    public Group(Parcel parcel) {
+        name = parcel.readString();
+        id = parcel.readLong();
+        friends = new ArrayList<>();
+        parcel.readTypedList(friends, Friend.CREATOR);
+    }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeLong(id);
+        dest.writeTypedList(friends);
+    }
+
+    public static Creator<Group> CREATOR = new Creator<Group>() {
+
+        @Override
+        public Group createFromParcel(Parcel source) {
+            return new Group(source);
+        }
+
+        @Override
+        public Group[] newArray(int size) {
+            return new Group[size];
+        }
+
+    };
 }

@@ -4,6 +4,9 @@ package group03.itsmap.groupshare.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 
+import com.facebook.AccessToken;
+import com.facebook.FacebookSdk;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,7 +25,23 @@ public class FacebookUtil {
 
     // Based on: http://stackoverflow.com/questions/9570237/android-check-internet-connection
     public static boolean isNetworkAvailable(final Context context) {
+        initialiseFacebookSdk(context);
         final ConnectivityManager connectivityManager = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE));
         return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected();
+    }
+
+    public static String getFacebookUserId(final Context context) {
+        initialiseFacebookSdk(context);
+        return AccessToken.getCurrentAccessToken().getUserId();
+    }
+
+    public static AccessToken getFacebookAccessToken(final Context context) {
+        initialiseFacebookSdk(context);
+        return AccessToken.getCurrentAccessToken();
+    }
+
+    public static void initialiseFacebookSdk(final Context context) {
+        if (FacebookSdk.isInitialized()) return;
+        FacebookSdk.sdkInitialize(context);
     }
 }

@@ -38,7 +38,6 @@ public class ToDoItem implements Parcelable {
         isChecked = (Boolean) parcel.readValue(getClass().getClassLoader());
     }
 
-
     @Override
     public int describeContents() {
         return 0;

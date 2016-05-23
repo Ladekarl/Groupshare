@@ -1,6 +1,5 @@
 package group03.itsmap.groupshare.fragments;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,13 +15,14 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import group03.itsmap.groupshare.GroupActivity;
 import group03.itsmap.groupshare.R;
+import group03.itsmap.groupshare.activities.GroupActivity;
 import group03.itsmap.groupshare.activities.ToDoActivity;
 import group03.itsmap.groupshare.adapters.ToDoListFragmentAdapter;
 import group03.itsmap.groupshare.models.Group;
 import group03.itsmap.groupshare.models.ToDoItem;
 import group03.itsmap.groupshare.services.ToDoService;
+import group03.itsmap.groupshare.utils.FacebookUtil;
 
 public class ToDoFragment extends Fragment {
 
@@ -32,15 +32,14 @@ public class ToDoFragment extends Fragment {
     private View view;
     private ImageButton toDoFragmentButton;
     private Group group;
-
-    private static final int TODO_ACTIVITY_KEY = 0x01;
+    private String userId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        userId = FacebookUtil.getFacebookUserId(getActivity().getApplicationContext());
         toDoItemList = new ArrayList<>();
-        toDoListFragmentAdapter = new ToDoListFragmentAdapter(getActivity(), R.layout.todo_list_item, toDoItemList);
+        toDoListFragmentAdapter = new ToDoListFragmentAdapter(getActivity(), R.layout.todo_list_item);
     }
 
     @Override
@@ -56,17 +55,17 @@ public class ToDoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent startToDoActivityIntent = new Intent(getActivity(), ToDoActivity.class);
-                startToDoActivityIntent.putExtra("ToDoList", toDoItemList);
-                startActivityForResult(startToDoActivityIntent, TODO_ACTIVITY_KEY);
+                startToDoActivityIntent.putExtra("Group", group);
+                startActivity(startToDoActivityIntent);
             }
         });
 
         if (getArguments() != null) {
-            Group groupVar = (Group) getArguments().getSerializable(GroupActivity.GROUP_KEY);
+            Group groupVar = getArguments().getParcelable(GroupActivity.GROUP_KEY);
             if (groupVar != null) {
                 group = groupVar;
                 IntentFilter toDoItemIntentFilter = new IntentFilter(
-                        ToDoService.GET_TODO_ITEMS_BROADCAST_INTENT + group.getName());
+                        ToDoService.GET_TODO_ITEMS_BROADCAST_INTENT + group.getId() + userId);
 
                 ToDoItemReceiver toDoItemReceiver = new ToDoItemReceiver();
                 LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
@@ -84,20 +83,18 @@ public class ToDoFragment extends Fragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == TODO_ACTIVITY_KEY) {
-            if (resultCode == Activity.RESULT_OK) {
-                toDoListFragmentAdapter.clear();
-                toDoItemList = data.getParcelableArrayListExtra("ToDoList");
-                toDoListFragmentAdapter.addAll(toDoItemList);
-                toDoListFragmentAdapter.notifyDataSetChanged();
-                saveToDoItems();
-            }
-        }
+    public void onPause() {
+        saveToDoItems();
+        super.onPause();
     }
 
+    private void saveToDoItems() {
+        ToDoService.startActionSaveToDoItems(getActivity(), toDoItemList, group.getId(), userId);
+    }
+
+
     private void getToDoItemsFromService() {
-        ToDoService.startActionGetToDoItems(getActivity(), group.getName());
+        ToDoService.startActionGetToDoItems(getActivity(), group.getId(), userId);
     }
 
     private class ToDoItemReceiver extends BroadcastReceiver {
@@ -110,19 +107,13 @@ public class ToDoFragment extends Fragment {
             if (toDoItemList.containsAll(items)) return;
             toDoItemList = items;
             if (toDoListFragmentAdapter == null) return;
-            toDoListFragmentAdapter.clear();
-            toDoListFragmentAdapter.addAll(toDoItemList);
-            toDoListFragmentAdapter.notifyDataSetChanged();
+            refreshAdapter();
         }
     }
 
-    @Override
-    public void onPause() {
-        saveToDoItems();
-        super.onPause();
-    }
-
-    private void saveToDoItems() {
-        ToDoService.startActionSaveToDoItems(getActivity(), toDoItemList, group.getName());
+    private void refreshAdapter() {
+        toDoListFragmentAdapter.clear();
+        toDoListFragmentAdapter.addAll(toDoItemList);
+        toDoListFragmentAdapter.notifyDataSetChanged();
     }
 }
