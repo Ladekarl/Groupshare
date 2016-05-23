@@ -53,6 +53,7 @@ public class ToDoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent startToDoActivityIntent = new Intent(getActivity(), ToDoActivity.class);
+                // TODO: Externalize
                 startToDoActivityIntent.putExtra("Group", group);
                 startToDoActivityIntent.putExtra("ToDoListId", toDoListId);
                 startActivity(startToDoActivityIntent);

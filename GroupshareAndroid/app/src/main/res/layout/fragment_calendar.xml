@@ -1,0 +1,27 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="group03.itsmap.groupshare.fragments.CalendarFragment"
+    android:background="@color/group_list_7"
+    android:orientation="vertical">
+
+    <CalendarView
+        android:id="@+id/fragment_calender_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@+id/calender_fragment_button"
+        android:layout_toStartOf="@+id/calender_fragment_button"/>
+
+    <ImageButton
+        android:id="@+id/calender_fragment_button"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/white_arrow_next_forward"
+        android:contentDescription="@string/forward_image" />
+</RelativeLayout>

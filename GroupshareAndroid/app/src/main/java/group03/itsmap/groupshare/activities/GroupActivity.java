@@ -38,6 +38,7 @@ import java.util.List;
 
 import group03.itsmap.groupshare.R;
 import group03.itsmap.groupshare.adapters.InviteFriendsAdapter;
+import group03.itsmap.groupshare.fragments.CalendarFragment;
 import group03.itsmap.groupshare.fragments.ToDoFragment;
 import group03.itsmap.groupshare.models.Friend;
 import group03.itsmap.groupshare.models.Group;
@@ -174,10 +175,13 @@ public class GroupActivity extends AppCompatActivity {
         bundle.putParcelable(GROUP_KEY, group);
         bundle.putLong(TODOLIST_ID_KEY, group.getToDoLists().get(0).getId());
         ToDoFragment toDoFragment = new ToDoFragment();
+        CalendarFragment calendarFragment = new CalendarFragment();
         toDoFragment.setArguments(bundle);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.act_fragment_toDo, toDoFragment);
+        fragmentTransaction.add(R.id.act_fragment_calendar, calendarFragment);
+
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
         // TODO: Create Calendar and Todo for chosen group

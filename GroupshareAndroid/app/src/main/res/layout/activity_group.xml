@@ -21,4 +21,11 @@
         android:layout_below="@id/group_toolbar"
         android:orientation="horizontal" />
 
+    <RelativeLayout
+        android:id="@+id/act_fragment_calendar"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_below="@id/act_fragment_toDo"
+        android:orientation="horizontal"/>
+
 </RelativeLayout>
