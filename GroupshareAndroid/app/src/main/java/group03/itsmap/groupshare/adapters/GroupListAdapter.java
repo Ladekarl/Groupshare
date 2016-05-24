@@ -28,12 +28,6 @@ public class GroupListAdapter extends ArrayAdapter<Group> {
         initColorList();
     }
 
-    public GroupListAdapter(Context context, int resource, List<Group> groups) {
-        super(context, resource);
-        initColorList();
-        addAll(groups);
-    }
-
     private void initColorList() {
         colorList = new ArrayList<>();
         colorList.add(ContextCompat.getDrawable(getContext(), R.drawable.group_1));

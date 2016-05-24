@@ -17,6 +17,7 @@ import java.util.List;
 
 import group03.itsmap.groupshare.R;
 import group03.itsmap.groupshare.models.Friend;
+import group03.itsmap.groupshare.utils.FacebookUtil;
 
 public class InviteFriendsAdapter extends ArrayAdapter<Friend> {
 
@@ -42,7 +43,7 @@ public class InviteFriendsAdapter extends ArrayAdapter<Friend> {
 
             ImageView pictureImageView = (ImageView) v.findViewById(R.id.invite_friends_picture);
             if (pictureImageView != null) {
-                new DownloadFacebookPicture(pictureImageView).execute(friend.getPictureUrl());
+                new FacebookUtil.DownloadFacebookPicture(pictureImageView).execute(friend.getPictureUrl());
             }
 
             TextView nameTextView = (TextView) v.findViewById(R.id.invite_friends_name);
@@ -50,7 +51,7 @@ public class InviteFriendsAdapter extends ArrayAdapter<Friend> {
                 nameTextView.setText(friend.getName());
             }
 
-            final CheckBox checkBox =  (CheckBox) v.findViewById(R.id.invite_friends_checkbox);
+            final CheckBox checkBox = (CheckBox) v.findViewById(R.id.invite_friends_checkbox);
 
             if (checkBox != null) {
                /* checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -69,30 +70,5 @@ public class InviteFriendsAdapter extends ArrayAdapter<Friend> {
             }
         }
         return v;
-    }
-
-    // Getting Bitmap from URL based on: http://stackoverflow.com/questions/2471935/how-to-load-an-imageview-by-url-in-android
-    private class DownloadFacebookPicture extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public DownloadFacebookPicture(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
     }
 }

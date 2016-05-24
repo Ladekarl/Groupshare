@@ -12,13 +12,28 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/AppTheme.Toolbar" />
+        app:theme="@style/AppTheme.Toolbar">
+
+        <TextView
+            android:id="@+id/group_toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:id="@+id/act_fragment_friends"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/group_toolbar"
+        android:orientation="horizontal" />
 
     <RelativeLayout
         android:id="@+id/act_fragment_toDo"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:layout_below="@id/group_toolbar"
+        android:layout_below="@id/act_fragment_friends"
         android:orientation="horizontal" />
 
     <RelativeLayout
@@ -26,6 +41,6 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_below="@id/act_fragment_toDo"
-        android:orientation="horizontal"/>
+        android:orientation="horizontal" />
 
 </RelativeLayout>

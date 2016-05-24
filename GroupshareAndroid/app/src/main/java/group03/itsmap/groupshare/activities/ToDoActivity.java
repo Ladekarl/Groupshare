@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import group03.itsmap.groupshare.R;
 import group03.itsmap.groupshare.adapters.ToDoListActivityAdapter;
@@ -56,6 +57,11 @@ public class ToDoActivity extends AppCompatActivity {
             toDoListView.addFooterView(footerLayout);
         }
 
+        TextView toolbarTitle = (TextView) findViewById(R.id.todo_toolbar_title);
+        if (toolbarTitle != null) {
+            toolbarTitle.setText(group.getName());
+        }
+
         Toolbar todoToolbar = (Toolbar) findViewById(R.id.todo_toolbar);
         setSupportActionBar(todoToolbar);
 
@@ -63,6 +69,7 @@ public class ToDoActivity extends AppCompatActivity {
         if (supportActionBar != null) {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
             supportActionBar.setDisplayShowHomeEnabled(true);
+            supportActionBar.setDisplayShowTitleEnabled(false);
         }
 
         if (todoToolbar != null) {

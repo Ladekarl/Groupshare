@@ -105,7 +105,7 @@ public class GroupOverviewActivity extends AppCompatActivity {
 
 
     private void createGroupCommand() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.GroupshareTheme_AlertDialog);
         builder.setTitle(getString(R.string.group_name));
 
         final EditText input = new EditText(this);
@@ -113,7 +113,7 @@ public class GroupOverviewActivity extends AppCompatActivity {
         input.setGravity(Gravity.CENTER);
         builder.setView(input);
 
-        builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.create_group), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 final String groupName = input.getText().toString();
@@ -163,7 +163,7 @@ public class GroupOverviewActivity extends AppCompatActivity {
         Collections.sort(groupList, new Comparator<Group>() {
             @Override
             public int compare(Group lhs, Group rhs) {
-                return (int) (rhs.getId() - lhs.getId());
+                return (int) (lhs.getId() - rhs.getId());
             }
         });
         groupListAdapter.addAll(groupList);

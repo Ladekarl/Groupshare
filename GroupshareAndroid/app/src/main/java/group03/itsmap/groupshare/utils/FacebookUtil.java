@@ -2,13 +2,19 @@ package group03.itsmap.groupshare.utils;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
+import android.os.AsyncTask;
+import android.widget.ImageView;
 
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.InputStream;
 
 import group03.itsmap.groupshare.models.Friend;
 
@@ -44,5 +50,31 @@ public class FacebookUtil {
     public static void initialiseFacebookSdk(final Context context) {
         if (FacebookSdk.isInitialized()) return;
         FacebookSdk.sdkInitialize(context);
+    }
+
+
+    // Getting Bitmap from URL based on: http://stackoverflow.com/questions/2471935/how-to-load-an-imageview-by-url-in-android
+    public static class DownloadFacebookPicture extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadFacebookPicture(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
     }
 }

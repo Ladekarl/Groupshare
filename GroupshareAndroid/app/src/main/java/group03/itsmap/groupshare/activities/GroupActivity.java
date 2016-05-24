@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -24,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -40,6 +40,7 @@ import java.util.List;
 import group03.itsmap.groupshare.R;
 import group03.itsmap.groupshare.adapters.InviteFriendsAdapter;
 import group03.itsmap.groupshare.fragments.CalendarFragment;
+import group03.itsmap.groupshare.fragments.FriendsFragment;
 import group03.itsmap.groupshare.fragments.ToDoFragment;
 import group03.itsmap.groupshare.models.Friend;
 import group03.itsmap.groupshare.models.Group;
@@ -57,8 +58,9 @@ public class GroupActivity extends AppCompatActivity {
     private Group group;
     private List<Friend> friendsToBeInvited;
     private String userId;
-    private ActionBar supportActionBar;
     private Long groupId;
+    private FriendsFragment friendsFragment;
+    private TextView toolbarTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +74,14 @@ public class GroupActivity extends AppCompatActivity {
         group = getIntent().getParcelableExtra(IntentKey.GroupActivityIntent);
         groupId = group.getId();
 
-        supportActionBar = getSupportActionBar();
+        ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
             supportActionBar.setDisplayShowHomeEnabled(true);
-            supportActionBar.setDisplayShowTitleEnabled(true);
+            supportActionBar.setDisplayShowTitleEnabled(false);
         }
+
+        toolbarTitle = (TextView) findViewById(R.id.group_toolbar_title);
 
         IntentFilter groupIntentFilter = new IntentFilter(
                 GroupService.GET_SINGLE_GROUP_BROADCAST_INTENT + groupId + userId);
@@ -151,8 +155,8 @@ public class GroupActivity extends AppCompatActivity {
             }
         };
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getString(R.string.are_you_sure)).setPositiveButton(getString(R.string.yes), dialogClickListener)
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.GroupshareTheme_AlertDialog);
+        builder.setTitle(getString(R.string.are_you_sure)).setPositiveButton(getString(R.string.yes), dialogClickListener)
                 .setNegativeButton(getString(R.string.no), dialogClickListener).show();
     }
 
@@ -165,8 +169,12 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     private void initGroupView() {
+        if (toolbarTitle != null) {
+            toolbarTitle.setText(group.getName());
+        }
         if (isFinishing()) return;
-        // ADDING TODOLIST TO GROUP Todo: Make this a manual decision
+        // ADDING FRAGMENTS TO GROUP Todo: Make this a manual decision
+        // Create ToDoFragment
         Bundle bundle = new Bundle();
         if (group.getToDoLists().size() == 0) {
             ToDoList toDoList = new ToDoList(1, getString(R.string.todo_list_text));
@@ -176,14 +184,18 @@ public class GroupActivity extends AppCompatActivity {
         bundle.putParcelable(GROUP_KEY, group);
         bundle.putLong(TODOLIST_ID_KEY, group.getToDoLists().get(0).getId());
         ToDoFragment toDoFragment = new ToDoFragment();
-        CalendarFragment calendarFragment = new CalendarFragment();
         toDoFragment.setArguments(bundle);
+        // Create calendar fragment
+        CalendarFragment calendarFragment = new CalendarFragment();
+        // Make transaction
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        // Create friends fragment
+        friendsFragment = FriendsFragment.createFriendsFragment(group.getFriends());
+        fragmentTransaction.add(R.id.act_fragment_friends, friendsFragment);
         fragmentTransaction.add(R.id.act_fragment_toDo, toDoFragment);
         fragmentTransaction.add(R.id.act_fragment_calendar, calendarFragment);
-        fragmentTransaction.commitAllowingStateLoss();
-        // TODO: Create Calendar and Todo for chosen group
+        fragmentTransaction.commit();
     }
 
     private void inviteFriends() {
@@ -218,14 +230,16 @@ public class GroupActivity extends AppCompatActivity {
     private void showDialogForFriends(List<Friend> friends) {
 
         ArrayAdapter adapter = new InviteFriendsAdapter(GroupActivity.this, R.layout.invite_friends, friends);
-        AlertDialog dialog = new AlertDialog.Builder(GroupActivity.this)
+        AlertDialog dialog = new AlertDialog.Builder(GroupActivity.this, R.style.GroupshareTheme_AlertDialog)
                 .setTitle(R.string.invite_friends)
                 .setAdapter(adapter, null)
                 .setPositiveButton("Invite friends", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         group.addFriends(friendsToBeInvited);
-
+                        if (friendsFragment != null) {
+                            friendsFragment.updateFriends(group.getFriends());
+                        }
                         if (friendsToBeInvited.size() >= 1) {
                             Toast.makeText(GroupActivity.this, R.string.invite_friends_success, Toast.LENGTH_SHORT).show();
                         }
@@ -282,7 +296,9 @@ public class GroupActivity extends AppCompatActivity {
             Group retrievedGroup = intent.getParcelableExtra(GroupService.EXTRA_SINGLE_GROUP);
             if (retrievedGroup == null) return;
             group = retrievedGroup;
-            supportActionBar.setTitle(group.getName());
+            if (toolbarTitle != null) {
+                toolbarTitle.setText(group.getName());
+            }
         }
     }
 }

@@ -49,7 +49,7 @@ public class Group implements Parcelable {
         this.name = name;
     }
 
-    public List<Friend> getFriends() {
+    public ArrayList<Friend> getFriends() {
         return friends;
     }
 
