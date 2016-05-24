@@ -2,16 +2,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="group03.itsmap.groupshare.fragments.CalendarFragment"
     android:background="@color/group_list_7"
     android:orientation="vertical">
 
-    <CalendarView
-        android:id="@+id/fragment_calender_view"
+    <com.alamkanak.weekview.WeekView
+        android:id="@+id/fragment_week_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_toLeftOf="@+id/calender_fragment_button"
-        android:layout_toStartOf="@+id/calender_fragment_button"/>
+        android:layout_toStartOf="@+id/calender_fragment_button"
+        app:eventTextColor="@android:color/white"
+        app:textSize="12sp"
+        app:hourHeight="60dp"
+        app:headerColumnPadding="8dp"
+        app:headerColumnTextColor="@android:color/white"
+        app:headerRowPadding="12dp"
+        app:columnGap="8dp"
+        app:noOfVisibleDays="1"
+        app:headerRowBackgroundColor="@color/group_list_7"
+        app:todayHeaderTextColor="@android:color/white"
+        app:dayBackgroundColor="#05000000"
+        app:todayBackgroundColor="@color/group_list_7_outer"
+        app:headerColumnBackground="@android:color/white"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"/>
 
     <ImageButton
         android:id="@+id/calender_fragment_button"
@@ -20,8 +36,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_margin="20dp"
         android:background="@drawable/white_arrow_next_forward"
         android:contentDescription="@string/forward_image" />
 </RelativeLayout>
