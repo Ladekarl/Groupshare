@@ -1,10 +1,15 @@
 package group03.itsmap.groupshare.activities;
 
+import android.content.Intent;
 import android.graphics.RectF;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CalendarView;
 
@@ -64,6 +69,30 @@ public class CalendarActivity extends AppCompatActivity implements WeekView.Even
                 }
             });
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.calendar_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.add_event_menu_item:
+                addEvent();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void addEvent() {
+        Intent startAddEventActivityIntent = new Intent(getApplicationContext(), AddEventActivity.class);
+        startActivity(startAddEventActivityIntent);
     }
 
     @Override

@@ -31,4 +31,10 @@
     <string name="are_you_sure">Are you sure?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="add_event">Add event</string>
+    <string name="save">Save</string>
+    <string name="event_name_hint">Enter title, description…</string>
+    <string name="event_start_time_hint">Choose start date and time…</string>
+    <string name="event_end_time_hint">Choose end date and time…</string>
+    <string name="event_location_hint">Enter location…</string>
 </resources>

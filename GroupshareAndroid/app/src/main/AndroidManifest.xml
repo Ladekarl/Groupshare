@@ -53,7 +53,8 @@
             android:name=".services.GroupService"
             android:exported="false" />
 
-        <activity android:name=".activities.CalendarActivity"></activity>
+        <activity android:name=".activities.CalendarActivity" />
+        <activity android:name=".activities.AddEventActivity"></activity>
     </application>
 
 </manifest>
