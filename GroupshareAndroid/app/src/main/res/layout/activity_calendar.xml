@@ -17,10 +17,23 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/AppTheme.Toolbar" />
 
-    <CalendarView
-        android:id="@+id/calender_view"
+    <com.alamkanak.weekview.WeekView
+        android:id="@+id/calendar_week_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/calendar_toolbar"/>
+        android:layout_below="@id/calendar_toolbar"
+        app:eventTextColor="@android:color/white"
+        app:textSize="12sp"
+        app:hourHeight="60dp"
+        app:headerColumnPadding="8dp"
+        app:headerColumnTextColor="@android:color/white"
+        app:headerRowPadding="12dp"
+        app:columnGap="8dp"
+        app:noOfVisibleDays="3"
+        app:headerRowBackgroundColor="@color/group_list_7"
+        app:todayHeaderTextColor="@android:color/white"
+        app:dayBackgroundColor="#05000000"
+        app:todayBackgroundColor="@color/group_list_7_outer"
+        app:headerColumnBackground="@android:color/white" />
 
 </RelativeLayout>
