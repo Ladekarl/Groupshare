@@ -32,7 +32,6 @@
         android:hint="@string/description"
         android:inputType="text"
         android:lines="1"
-        android:maxLength="35"
         android:textColor="@android:color/white"
         android:textColorHint="@android:color/white" />
 </RelativeLayout>

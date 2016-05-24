@@ -36,6 +36,8 @@ public class ToDoActivity extends AppCompatActivity {
     private Group group;
     private long toDoListId;
     private EditText todoTitleText;
+    public static final String GROUP_INTENT_KEY = "group03.itsmap.groupshare.activities.ToDoActivity.GroupIntentKey";
+    public static final String TODOLIST_ID_INTENT_KEY = "group03.itsmap.groupshare.activities.ToDoActivity.ToDoListIntentKey";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +45,8 @@ public class ToDoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_to_do);
         userId = FacebookUtil.getFacebookUserId(getApplicationContext());
         toDoList = new ToDoList();
-        group = getIntent().getParcelableExtra("Group");
-        toDoListId = getIntent().getLongExtra("ToDoListId", 0);
+        group = getIntent().getParcelableExtra(GROUP_INTENT_KEY);
+        toDoListId = getIntent().getLongExtra(TODOLIST_ID_INTENT_KEY, 0);
         toDoListActivityAdapter = new ToDoListActivityAdapter(this, R.layout.todo_list_item);
         toDoListView = (ListView) findViewById(R.id.act_todo_list);
         if (toDoListView != null) {

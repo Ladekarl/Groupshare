@@ -32,6 +32,7 @@ public class FacebookUtil {
 
     public static String getFacebookUserId(final Context context) {
         initialiseFacebookSdk(context);
+
         return AccessToken.getCurrentAccessToken().getUserId();
     }
 

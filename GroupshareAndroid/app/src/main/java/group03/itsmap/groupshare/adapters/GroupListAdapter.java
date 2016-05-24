@@ -28,6 +28,12 @@ public class GroupListAdapter extends ArrayAdapter<Group> {
         initColorList();
     }
 
+    public GroupListAdapter(Context context, int resource, List<Group> groups) {
+        super(context, resource);
+        initColorList();
+        addAll(groups);
+    }
+
     private void initColorList() {
         colorList = new ArrayList<>();
         colorList.add(ContextCompat.getDrawable(getContext(), R.drawable.group_1));
@@ -65,8 +71,7 @@ public class GroupListAdapter extends ArrayAdapter<Group> {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), GroupActivity.class);
-                    // TODO: Create class to for shared Intent k
-                    intent.putExtra(IntentKey.GroupActivityIntent, group.getId());
+                    intent.putExtra(IntentKey.GroupActivityIntent, group);
                     v.getContext().startActivity(intent);
                 }
             });

@@ -1,9 +1,9 @@
 <resources>
 
     <style name="AppTheme" parent="GroupshareTheme">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="AppTheme.Toolbar" parent="GroupshareTheme.Toolbar" />
-
+    
 </resources>

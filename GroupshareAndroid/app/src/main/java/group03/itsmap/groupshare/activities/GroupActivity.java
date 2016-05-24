@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -68,7 +69,8 @@ public class GroupActivity extends AppCompatActivity {
         friendsToBeInvited = new ArrayList<>();
         setSupportActionBar(groupToolbar);
 
-        groupId = getIntent().getLongExtra(IntentKey.GroupActivityIntent, 0);
+        group = getIntent().getParcelableExtra(IntentKey.GroupActivityIntent);
+        groupId = group.getId();
 
         supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
@@ -84,7 +86,7 @@ public class GroupActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 groupReceiver,
                 groupIntentFilter);
-
+        initGroupView();
         if (groupToolbar != null) {
             groupToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -98,7 +100,6 @@ public class GroupActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        getGroupFromService();
     }
 
     @Override
@@ -170,7 +171,7 @@ public class GroupActivity extends AppCompatActivity {
         if (group.getToDoLists().size() == 0) {
             ToDoList toDoList = new ToDoList(1, getString(R.string.todo_list_text));
             group.addToDoList(toDoList);
-            ToDoService.startActionSaveToDoList(this, toDoList, group.getId(), toDoList.getId(), userId);
+            ToDoService.startActionSaveToDoList(GroupActivity.this, toDoList, group.getId(), toDoList.getId(), userId);
         }
         bundle.putParcelable(GROUP_KEY, group);
         bundle.putLong(TODOLIST_ID_KEY, group.getToDoLists().get(0).getId());
@@ -181,9 +182,7 @@ public class GroupActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.act_fragment_toDo, toDoFragment);
         fragmentTransaction.add(R.id.act_fragment_calendar, calendarFragment);
-
-        fragmentTransaction.commit();
-        fragmentManager.executePendingTransactions();
+        fragmentTransaction.commitAllowingStateLoss();
         // TODO: Create Calendar and Todo for chosen group
     }
 
@@ -284,7 +283,6 @@ public class GroupActivity extends AppCompatActivity {
             if (retrievedGroup == null) return;
             group = retrievedGroup;
             supportActionBar.setTitle(group.getName());
-            initGroupView();
         }
     }
 }
