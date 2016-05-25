@@ -1,12 +1,12 @@
 package group03.itsmap.groupshare.activities;
 
 import android.app.DatePickerDialog.OnDateSetListener;
-import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
-import android.os.StrictMode;
+import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +16,9 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
+
+import com.thebluealliance.spectrum.SpectrumDialog;
 
 import group03.itsmap.groupshare.R;
 import group03.itsmap.groupshare.fragments.DatePickerFragment;
@@ -65,7 +68,7 @@ public class AddEventActivity extends AppCompatActivity {
             });
         }
 
-        if (eventStartTime != null)  {
+        if (eventStartTime != null) {
             eventStartTime.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -74,11 +77,20 @@ public class AddEventActivity extends AppCompatActivity {
             });
         }
 
-        if (eventEndTime != null)  {
+        if (eventEndTime != null) {
             eventEndTime.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     showTimePicker(v);
+                }
+            });
+        }
+
+        if (eventColor != null) {
+            eventColor.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showColorPicker();
                 }
             });
         }
@@ -101,6 +113,23 @@ public class AddEventActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void showColorPicker() {
+        // TODO: Fix title color
+        new SpectrumDialog.Builder(new ContextThemeWrapper(getApplicationContext(), R.style.GroupshareTheme_AlertDialog))
+                .setColors(R.array.color_palette)
+                .setDismissOnColorSelected(true)
+                .setOnColorSelectedListener(new SpectrumDialog.OnColorSelectedListener() {
+                    @Override
+                    public void onColorSelected(boolean positiveResult, @ColorInt int color) {
+                        if (positiveResult) {
+                            Toast.makeText(getApplicationContext(), "Color selected: #" + Integer.toHexString(color).toUpperCase(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Dialog cancelled", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).build().show(getSupportFragmentManager(), "ColorPicker");
     }
 
     private void showDatePicker(View v) {
