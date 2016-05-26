@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.facebook.AccessToken;
+
 import org.lucasr.twowayview.TwoWayView;
 
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 import group03.itsmap.groupshare.R;
 import group03.itsmap.groupshare.adapters.FriendsListAdapter;
 import group03.itsmap.groupshare.models.Friend;
+import group03.itsmap.groupshare.utils.FacebookUtil;
 
 public class FriendsFragment extends Fragment {
     private static final String FRIENDS_LIST_KEY = "group03.itsmap.groupshare.fragments.FriendsFragment.FriendsList";
@@ -54,6 +57,7 @@ public class FriendsFragment extends Fragment {
     private void refreshAdapter() {
         if (friendsListAdapter == null) return;
         friendsListAdapter.clear();
+        friendsListAdapter.add(new Friend(FacebookUtil.UserInfo.getId(), FacebookUtil.UserInfo.getName(), FacebookUtil.UserInfo.getPictureUrl()));
         friendsListAdapter.addAll(friendsList);
         friendsListAdapter.notifyDataSetChanged();
     }

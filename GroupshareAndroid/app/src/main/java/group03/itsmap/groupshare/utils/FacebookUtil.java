@@ -77,4 +77,34 @@ public class FacebookUtil {
             bmImage.setImageBitmap(result);
         }
     }
+
+    public static class UserInfo {
+        private static long id;
+        private static String name;
+        private static String pictureUrl;
+
+        public static long getId() {
+            return id;
+        }
+
+        public static void setId(long id) {
+            UserInfo.id = id;
+        }
+
+        public static String getName() {
+            return name;
+        }
+
+        public static void setName(String name) {
+            UserInfo.name = name;
+        }
+
+        public static String getPictureUrl() {
+            return pictureUrl;
+        }
+
+        public static void setPictureUrl(String pictureUrl) {
+            UserInfo.pictureUrl = pictureUrl;
+        }
+    }
 }

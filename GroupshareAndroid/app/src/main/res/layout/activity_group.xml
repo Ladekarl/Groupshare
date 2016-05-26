@@ -25,7 +25,7 @@
     <RelativeLayout
         android:id="@+id/act_fragment_friends"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="120dp"
         android:layout_below="@id/group_toolbar"
         android:orientation="horizontal" />
 

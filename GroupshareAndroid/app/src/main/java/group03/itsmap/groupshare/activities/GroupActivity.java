@@ -209,16 +209,22 @@ public class GroupActivity extends AppCompatActivity {
                             for (int i = 0; i < objects.length(); i++) {
                                 try {
                                     JSONObject object = objects.getJSONObject(i);
-                                    friends.add(FacebookUtil.jsonObjectToFriend(object));
+                                    Friend newFriend = FacebookUtil.jsonObjectToFriend(object);
+                                    for (Friend oldFriend : friends) {
+                                        if (oldFriend.getFacebookId() == newFriend.getFacebookId()) {
+                                            friends.add(newFriend);
+                                        }
+                                    }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                             }
+
                             showDialogForFriends(friends);
                         }
                     });
             Bundle params = new Bundle();
-            params.putString("fields", "id, name, picture");
+            params.putString("fields", "id, name, picture.type(large)");
             request.setParameters(params);
             request.executeAsync();
         } else {

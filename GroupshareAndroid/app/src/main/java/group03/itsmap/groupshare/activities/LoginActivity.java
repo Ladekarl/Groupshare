@@ -10,11 +10,18 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import group03.itsmap.groupshare.R;
+import group03.itsmap.groupshare.models.Friend;
 import group03.itsmap.groupshare.utils.FacebookUtil;
 
 public class LoginActivity extends AppCompatActivity {
@@ -33,25 +40,59 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
         if (loginButton != null) {
-            loginButton.setReadPermissions("email", "public_profile", "user_friends");
-            loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-                @Override
-                public void onSuccess(LoginResult loginResult) {
-                    Toast.makeText(LoginActivity.this, R.string.logged_in, Toast.LENGTH_SHORT).show();
-                    startGroupOverviewActivity();
-                }
-
-                @Override
-                public void onCancel() {
-                    Toast.makeText(LoginActivity.this, R.string.login_cancelled, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onError(FacebookException error) {
-                    Toast.makeText(LoginActivity.this, R.string.fb_login_error, Toast.LENGTH_SHORT).show();
-                }
-            });
+            registerLoginCallbacks(loginButton);
         }
+    }
+
+    private void registerLoginCallbacks(LoginButton loginButton) {
+        loginButton.setReadPermissions("email", "public_profile", "user_friends");
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Toast.makeText(LoginActivity.this, R.string.logged_in, Toast.LENGTH_SHORT).show();
+                getUserInfo();
+                startGroupOverviewActivity();
+            }
+
+            @Override
+            public void onCancel() {
+                Toast.makeText(LoginActivity.this, R.string.login_cancelled, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Toast.makeText(LoginActivity.this, R.string.fb_login_error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getUserInfo() {
+        if (!FacebookUtil.isNetworkAvailable(this)) return;
+        Bundle params = new Bundle();
+        params.putString("fields", "id,name,picture.type(large)");
+        new GraphRequest(
+                AccessToken.getCurrentAccessToken(),
+                "me",
+                params,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+                        JSONObject obj = response.getJSONObject();
+                        try {
+                            Friend mySelf = FacebookUtil.jsonObjectToFriend(obj);
+                            if (mySelf.getName() != null) {
+                                FacebookUtil.UserInfo.setName(mySelf.getName());
+                            }
+                            if (mySelf.getPictureUrl() != null) {
+                                FacebookUtil.UserInfo.setPictureUrl(mySelf.getPictureUrl());
+                            }
+                            FacebookUtil.UserInfo.setId(mySelf.getFacebookId());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        ).executeAsync();
     }
 
     @Override
@@ -61,6 +102,7 @@ public class LoginActivity extends AppCompatActivity {
         checkLoginHandler.postDelayed(new Runnable() {
             public void run() {
                 if (isLoggedIn()) {
+                    getUserInfo();
                     startGroupOverviewActivity();
                 }
             }
@@ -75,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public boolean isLoggedIn() {
         AccessToken accessToken = FacebookUtil.getFacebookAccessToken(getApplicationContext());
-        return accessToken != null;
+        return !(accessToken == null || accessToken.isExpired());
     }
 
     @Override

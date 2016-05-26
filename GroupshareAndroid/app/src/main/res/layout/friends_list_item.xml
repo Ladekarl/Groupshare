@@ -2,13 +2,36 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:focusable="false"
+    android:orientation="vertical">
 
-    <ImageView
+    <!-- From https://github.com/vinc3m1/RoundedImageView-->
+    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/friends_list_image"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:focusable="false"
+        app:civ_border_color="@android:color/black"
+        app:civ_border_width="2dp" />
+
+    <TextView
+        android:id="@+id/friends_list_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:contentDescription="@string/image_of_friend"
-        android:focusable="false" />
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="3dp"
+        android:focusable="false"
+        android:gravity="center"
+        android:textColor="@android:color/black" />
 </LinearLayout>
