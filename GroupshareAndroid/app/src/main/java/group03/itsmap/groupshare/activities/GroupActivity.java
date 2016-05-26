@@ -210,10 +210,15 @@ public class GroupActivity extends AppCompatActivity {
                                 try {
                                     JSONObject object = objects.getJSONObject(i);
                                     Friend newFriend = FacebookUtil.jsonObjectToFriend(object);
-                                    for (Friend oldFriend : friends) {
+                                    boolean friendExists = false;
+                                    for (Friend oldFriend : group.getFriends()) {
                                         if (oldFriend.getFacebookId() == newFriend.getFacebookId()) {
-                                            friends.add(newFriend);
+                                            friendExists = true;
+                                            break;
                                         }
+                                    }
+                                    if (!friendExists) {
+                                        friends.add(newFriend);
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
