@@ -43,7 +43,10 @@ public class FriendsListAdapter extends ArrayAdapter<Friend> {
         final Friend friend = getItem(position);
 
         if (friendName != null) {
-            friendName.setText(friend.getName());
+            String firstName = friend.getName().split("\\s+")[0];
+            if (firstName != null) {
+                friendName.setText(firstName);
+            }
         }
 
         if (friendImage != null) {

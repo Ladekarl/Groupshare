@@ -33,5 +33,7 @@
         android:layout_marginTop="3dp"
         android:focusable="false"
         android:gravity="center"
+        android:lines="1"
+        android:maxLines="1"
         android:textColor="@android:color/black" />
 </LinearLayout>
