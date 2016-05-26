@@ -3,10 +3,12 @@ package group03.itsmap.groupshare.activities;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
@@ -20,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.thebluealliance.spectrum.SpectrumDialog;
 
@@ -60,6 +63,7 @@ public class AddEventActivity extends AppCompatActivity {
         eventLocation = (EditText) findViewById(R.id.event_location_text);
         eventColor = (ImageView) findViewById(R.id.event_color_image);
         eventColorText = (TextView) findViewById(R.id.event_color_text);
+        color = ContextCompat.getColor(this, R.color.colorPrimary);
 
         if (eventStartDate != null) {
             eventStartDate.setOnClickListener(new View.OnClickListener() {
@@ -219,7 +223,9 @@ public class AddEventActivity extends AppCompatActivity {
     };
 
     private String timeValuesToString(int hour, int minute) {
-        return String.valueOf(hour + ":" + minute);
+        String displayHour = hour < 10 ? "0" + hour : String.valueOf(hour);
+        String displayMinute = minute < 10 ? "0" + minute : String.valueOf(minute);
+        return displayHour + ":" + displayMinute;
     }
 
 
@@ -245,11 +251,15 @@ public class AddEventActivity extends AppCompatActivity {
         String name = eventName.getText().toString();
         String location = eventLocation.getText().toString();
 
-        CalendarEvent event = new CalendarEvent(System.currentTimeMillis(), name, location, startYear, startMonth,
-                startDay, startHour, startMinute, endYear, endMonth, endDay, endHour, endMinute, color);
-        Intent intent = new Intent();
-        intent.putExtra(IntentKey.AddEventIntent, event);
-        setResult(RESULT_OK, intent);
-        finish();
+        if (!name.equals("") && startYear != 0 && startHour != 0 && endYear != 0 && endHour != 0) {
+            CalendarEvent event = new CalendarEvent(System.currentTimeMillis(), name, location, startYear, startMonth,
+                    startDay, startHour, startMinute, endYear, endMonth, endDay, endHour, endMinute, color);
+            Intent intent = new Intent();
+            intent.putExtra(IntentKey.AddEventIntent, event);
+            setResult(RESULT_OK, intent);
+            finish();
+        } else {
+            Toast.makeText(AddEventActivity.this, R.string.add_event_fill_fields, Toast.LENGTH_SHORT).show();
+        }
     }
 }
