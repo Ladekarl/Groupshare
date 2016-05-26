@@ -74,24 +74,49 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/event_start_time"
-                    android:layout_width="match_parent"
+                    android:id="@+id/event_start_date"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="@string/event_start_time_hint"
+                    android:hint="@string/event_start_date_hint"
                     android:textColor="@android:color/white"
                     android:textColorHint="@android:color/white"
                     android:textSize="18sp"
                     android:layout_marginBottom="16dp"/>
 
                 <TextView
-                    android:id="@+id/event_end_time"
+                    android:id="@+id/event_start_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="10:30"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@android:color/white"
+                    android:textSize="18sp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignLeft="@+id/event_end_time"
+                    android:layout_alignStart="@+id/event_end_time" />
+
+                <TextView
+                    android:id="@+id/event_end_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/event_start_time"
-                    android:hint="@string/event_end_time_hint"
+                    android:layout_below="@id/event_start_date"
+                    android:hint="@string/event_end_date_hint"
                     android:textColor="@android:color/white"
                     android:textColorHint="@android:color/white"
                     android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/event_end_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="10:30"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@android:color/white"
+                    android:textSize="18sp"
+                    android:layout_below="@+id/event_start_date"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
+
 
             </RelativeLayout>
         </LinearLayout>
