@@ -3,14 +3,8 @@ package group03.itsmap.groupshare.activities;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.StateListDrawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.v7.app.ActionBar;
@@ -26,10 +20,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
-import com.alamkanak.weekview.WeekViewEvent;
 import com.thebluealliance.spectrum.SpectrumDialog;
+
+import java.util.UUID;
 
 import group03.itsmap.groupshare.R;
 import group03.itsmap.groupshare.fragments.DatePickerFragment;
@@ -250,8 +244,9 @@ public class AddEventActivity extends AppCompatActivity {
     private void saveEventAndCloseActivity() {
         String name = eventName.getText().toString();
         String location = eventLocation.getText().toString();
-        CalendarEvent event = new CalendarEvent(name, location, startYear, startMonth, startDay,
-                startHour, startMinute, endYear, endMonth, endDay, endHour, endMinute, color);
+
+        CalendarEvent event = new CalendarEvent(System.currentTimeMillis(), name, location, startYear, startMonth,
+                startDay, startHour, startMinute, endYear, endMonth, endDay, endHour, endMinute, color);
         Intent intent = new Intent();
         intent.putExtra(IntentKey.AddEventIntent, event);
         setResult(RESULT_OK, intent);

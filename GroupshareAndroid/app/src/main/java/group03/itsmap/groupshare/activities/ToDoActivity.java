@@ -39,6 +39,7 @@ public class ToDoActivity extends AppCompatActivity {
     private EditText todoTitleText;
     public static final String GROUP_INTENT_KEY = "group03.itsmap.groupshare.activities.ToDoActivity.GroupIntentKey";
     public static final String TODOLIST_ID_INTENT_KEY = "group03.itsmap.groupshare.activities.ToDoActivity.ToDoListIntentKey";
+    private ToDoListReceiver toDoItemReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +126,7 @@ public class ToDoActivity extends AppCompatActivity {
             IntentFilter toDoItemIntentFilter = new IntentFilter(
                     ToDoService.GET_TODO_LIST_BROADCAST_INTENT + group.getId() + toDoListId + userId);
 
-            ToDoListReceiver toDoItemReceiver = new ToDoListReceiver();
+            toDoItemReceiver = new ToDoListReceiver();
             LocalBroadcastManager.getInstance(this).registerReceiver(
                     toDoItemReceiver,
                     toDoItemIntentFilter);
@@ -146,6 +147,12 @@ public class ToDoActivity extends AppCompatActivity {
         toDoList.setTitle(todoTitleText.getText().toString());
         saveToDoList();
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(toDoItemReceiver);
+        super.onDestroy();
     }
 
     private void saveToDoList() {

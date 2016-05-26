@@ -65,6 +65,7 @@ public class GroupActivity extends AppCompatActivity {
     private Long groupId;
     private FriendsFragment friendsFragment;
     private TextView toolbarTitle;
+    private GroupReceiver groupReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +91,7 @@ public class GroupActivity extends AppCompatActivity {
         IntentFilter groupIntentFilter = new IntentFilter(
                 GroupService.GET_SINGLE_GROUP_BROADCAST_INTENT + groupId + userId);
 
-        GroupReceiver groupReceiver = new GroupReceiver();
+        groupReceiver = new GroupReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 groupReceiver,
                 groupIntentFilter);
@@ -150,6 +151,9 @@ public class GroupActivity extends AppCompatActivity {
                         for (ToDoList toDoList : group.getToDoLists()) {
                             ToDoService.startActionDeleteToDoList(GroupActivity.this, group.getId(), toDoList.getId(), userId);
                         }
+                        for (GroupShareCalendar calendar : group.getCalendars()) {
+                            CalendarService.startActionDeleteCalendar(GroupActivity.this, group.getId(), calendar.getId(), userId);
+                        }
                         userDeletedGroup = true;
                         finish();
                         break;
@@ -166,6 +170,12 @@ public class GroupActivity extends AppCompatActivity {
 
     private void getGroupFromService() {
         GroupService.startActionGetSingleGroup(this, groupId, userId);
+    }
+
+    @Override
+    protected void onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(groupReceiver);
+        super.onDestroy();
     }
 
     private void saveGroup() {

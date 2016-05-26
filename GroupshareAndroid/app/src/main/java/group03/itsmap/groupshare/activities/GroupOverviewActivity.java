@@ -34,6 +34,7 @@ public class GroupOverviewActivity extends AppCompatActivity {
     private ArrayList<Group> groupList;
 
     private String userId;
+    private GroupReceiver groupReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +57,7 @@ public class GroupOverviewActivity extends AppCompatActivity {
         IntentFilter groupIntentFilter = new IntentFilter(
                 GroupService.GET_GROUPS_BROADCAST_INTENT + userId);
 
-        GroupReceiver groupReceiver = new GroupReceiver();
+        groupReceiver = new GroupReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 groupReceiver,
                 groupIntentFilter);
@@ -92,6 +93,12 @@ public class GroupOverviewActivity extends AppCompatActivity {
     public void onPause() {
         saveGroups();
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(groupReceiver);
+        super.onDestroy();
     }
 
 

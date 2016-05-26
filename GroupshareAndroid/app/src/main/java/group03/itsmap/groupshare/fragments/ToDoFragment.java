@@ -31,6 +31,7 @@ public class ToDoFragment extends Fragment {
     private String userId;
     private Long toDoListId;
     private TextView toDoListTitleText;
+    private ToDoListReceiver toDoItemReceiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,7 +71,7 @@ public class ToDoFragment extends Fragment {
                 IntentFilter toDoItemIntentFilter = new IntentFilter(
                         ToDoService.GET_TODO_LIST_BROADCAST_INTENT + group.getId() + toDoListId + userId);
 
-                ToDoListReceiver toDoItemReceiver = new ToDoListReceiver();
+                toDoItemReceiver = new ToDoListReceiver();
                 LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
                         toDoItemReceiver,
                         toDoItemIntentFilter);
@@ -91,14 +92,20 @@ public class ToDoFragment extends Fragment {
         super.onPause();
     }
 
-        private void saveToDoList() {
-            ToDoService.startActionSaveToDoList(getActivity(), toDoList, group.getId(), toDoListId, userId);
-        }
+    @Override
+    public void onDestroy() {
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(toDoItemReceiver);
+        super.onDestroy();
+    }
+
+    private void saveToDoList() {
+        ToDoService.startActionSaveToDoList(getActivity(), toDoList, group.getId(), toDoListId, userId);
+    }
 
 
-        private void getToDoListFromService() {
-            ToDoService.startActionGetToDoList(getActivity(), group.getId(), toDoListId, userId);
-        }
+    private void getToDoListFromService() {
+        ToDoService.startActionGetToDoList(getActivity(), group.getId(), toDoListId, userId);
+    }
 
     private class ToDoListReceiver extends BroadcastReceiver {
         private ToDoListReceiver() {

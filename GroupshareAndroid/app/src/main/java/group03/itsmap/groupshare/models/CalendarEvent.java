@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class CalendarEvent implements Parcelable {
+    private Long id;
     private String name, location;
     private int startYear, startMonth, startDay, startHour, startMinute, endYear, endMonth, endDay, endHour, endMinute;
     private int color;
@@ -13,7 +14,8 @@ public class CalendarEvent implements Parcelable {
 
     }
 
-    public CalendarEvent(String name, String location, int startYear, int startMonth, int startDay, int startHour, int startMinute, int endYear, int endMonth, int endDay, int endHour, int endMinute, int color) {
+    public CalendarEvent(Long id, String name, String location, int startYear, int startMonth, int startDay, int startHour, int startMinute, int endYear, int endMonth, int endDay, int endHour, int endMinute, int color) {
+        this.id = id;
         this.name = name;
         this.location = location;
         this.startYear = startYear;
@@ -30,6 +32,7 @@ public class CalendarEvent implements Parcelable {
     }
 
     public CalendarEvent(Parcel parcel) {
+        id = parcel.readLong();
         name = parcel.readString();
         location = parcel.readString();
         startYear = parcel.readInt();
@@ -154,8 +157,18 @@ public class CalendarEvent implements Parcelable {
         return 0;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+
         dest.writeString(name);
         dest.writeString(location);
         dest.writeInt(startYear);

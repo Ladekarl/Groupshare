@@ -97,14 +97,19 @@ public class CalendarActivity extends AppCompatActivity implements WeekView.Even
         }
 
         if (group != null) {
-            IntentFilter calendarIntentFilter = new IntentFilter(
+            IntentFilter getCalendarIntentFilter = new IntentFilter(
                     CalendarService.GET_CALENDAR_BROADCAST_INTENT + group.getId() + calendarId + userId);
+
+            IntentFilter deleteCalendarEventIntentFilter = new IntentFilter(
+                    CalendarService.DELETE_CALENDAR_EVENT_BROADCAST_INTENT);
 
             calendarReceiver = new CalendarReceiver();
             LocalBroadcastManager.getInstance(this).registerReceiver(
                     calendarReceiver,
-                    calendarIntentFilter);
-
+                    getCalendarIntentFilter);
+            LocalBroadcastManager.getInstance(this).registerReceiver(
+                    calendarReceiver,
+                    deleteCalendarEventIntentFilter);
         }
     }
 
@@ -182,13 +187,14 @@ public class CalendarActivity extends AppCompatActivity implements WeekView.Even
     }
 
     @Override
-    public void onEventLongPress(WeekViewEvent event, RectF eventRect) {
+    public void onEventLongPress(final WeekViewEvent event, RectF eventRect) {
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
-                        finish();
+                        groupShareCalendar.getCalendarEvents();
+                        CalendarService.startActionDeleteCalendarEvent(CalendarActivity.this, group.getId(), calendarId, userId, event.getId());
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:
                         break;
@@ -196,7 +202,7 @@ public class CalendarActivity extends AppCompatActivity implements WeekView.Even
             }
         };
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.GroupshareTheme_AlertDialog);
-        builder.setTitle(getString(R.string.are_you_sure)).setPositiveButton(getString(R.string.yes), dialogClickListener)
+        builder.setTitle(getString(R.string.delete_event_dialog)).setPositiveButton(getString(R.string.yes), dialogClickListener)
                 .setNegativeButton(getString(R.string.no), dialogClickListener).show();
     }
 

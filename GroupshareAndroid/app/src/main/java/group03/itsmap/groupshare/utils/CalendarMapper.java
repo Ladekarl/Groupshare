@@ -8,9 +8,6 @@ import java.util.List;
 
 import group03.itsmap.groupshare.models.CalendarEvent;
 
-/**
- * Created by Mathis on 26-05-2016.
- */
 public class CalendarMapper {
     public static List<WeekViewEvent> calendarEventsToWeekViewEvents(List<CalendarEvent> calendarEvents) {
         List<WeekViewEvent> weekViewEvents = new ArrayList<>();
@@ -22,7 +19,7 @@ public class CalendarMapper {
     }
 
     public static WeekViewEvent calendarEventToWeekViewEvent(CalendarEvent event) {
-        WeekViewEvent weekViewEvent = new WeekViewEvent(0, event.getName(), event.getStartYear(), event.getStartMonth(),
+        WeekViewEvent weekViewEvent = new WeekViewEvent(event.getId(), event.getName(), event.getStartYear(), event.getStartMonth(),
                 event.getStartDay(), event.getStartHour(), event.getStartMinute(), event.getEndYear(), event.getEndMonth(),
                 event.getEndDay(), event.getEndHour(), event.getEndMinute());
         weekViewEvent.setLocation(event.getLocation());
