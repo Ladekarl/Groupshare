@@ -2,6 +2,15 @@ package group03.itsmap.groupshare.activities;
 
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.TimePickerDialog.OnTimeSetListener;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.StateListDrawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.v7.app.ActionBar;
@@ -14,15 +23,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.alamkanak.weekview.WeekViewEvent;
 import com.thebluealliance.spectrum.SpectrumDialog;
 
 import group03.itsmap.groupshare.R;
 import group03.itsmap.groupshare.fragments.DatePickerFragment;
 import group03.itsmap.groupshare.fragments.TimePickerFragment;
+import group03.itsmap.groupshare.models.CalendarEvent;
+import group03.itsmap.groupshare.utils.IntentKey;
 
 import static group03.itsmap.groupshare.R.drawable.abc_ic_clear_mtrl_alpha;
 
@@ -35,7 +48,10 @@ public class AddEventActivity extends AppCompatActivity {
     private TextView eventEndDate;
     private TextView eventEndTime;
     private EditText eventLocation;
-    private TextView eventColor;
+    private ImageView eventColor;
+    private TextView eventColorText;
+    private int startYear, startMonth, startDay, startHour, startMinute, endYear, endMonth, endDay, endHour, endMinute;
+    @ColorInt private int color;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +64,8 @@ public class AddEventActivity extends AppCompatActivity {
         eventEndDate = (TextView) findViewById(R.id.event_end_date);
         eventEndTime = (TextView) findViewById(R.id.event_end_time);
         eventLocation = (EditText) findViewById(R.id.event_location_text);
-        eventColor = (TextView) findViewById(R.id.event_color_text);
+        eventColor = (ImageView) findViewById(R.id.event_color_image);
+        eventColorText = (TextView) findViewById(R.id.event_color_text);
 
         if (eventStartDate != null) {
             eventStartDate.setOnClickListener(new View.OnClickListener() {
@@ -86,8 +103,8 @@ public class AddEventActivity extends AppCompatActivity {
             });
         }
 
-        if (eventColor != null) {
-            eventColor.setOnClickListener(new View.OnClickListener() {
+        if (eventColorText != null) {
+            eventColorText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     showColorPicker();
@@ -116,17 +133,20 @@ public class AddEventActivity extends AppCompatActivity {
     }
 
     private void showColorPicker() {
-        // TODO: Fix title color
         new SpectrumDialog.Builder(new ContextThemeWrapper(getApplicationContext(), R.style.GroupshareTheme_AlertDialog))
                 .setColors(R.array.color_palette)
                 .setDismissOnColorSelected(true)
+                //Work around for not showing selected color - Picking a color not available
+                .setSelectedColor(getResources().getColor(R.color.md_yellow_900))
                 .setOnColorSelectedListener(new SpectrumDialog.OnColorSelectedListener() {
                     @Override
-                    public void onColorSelected(boolean positiveResult, @ColorInt int color) {
+                    public void onColorSelected(boolean positiveResult, @ColorInt int newColor) {
                         if (positiveResult) {
-                            Toast.makeText(getApplicationContext(), "Color selected: #" + Integer.toHexString(color).toUpperCase(), Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Dialog cancelled", Toast.LENGTH_SHORT).show();
+                            LayerDrawable layer = (LayerDrawable) eventColor.getBackground();
+                            GradientDrawable shape = (GradientDrawable) layer.findDrawableByLayerId(R.id.color_viewer_shape);
+                            shape.setColor(newColor);
+                            color = newColor;
+                            eventColorText.setText(R.string.event_color_selected);
                         }
                     }
                 }).build().show(getSupportFragmentManager(), "ColorPicker");
@@ -149,6 +169,10 @@ public class AddEventActivity extends AppCompatActivity {
     OnDateSetListener onStartDateSetListener = new OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int day) {
+            month = month+1;
+            startYear = year;
+            startMonth = month;
+            startDay = day;
             eventStartDate.setText(dateValuesToString(year, month, day));
         }
     };
@@ -156,6 +180,10 @@ public class AddEventActivity extends AppCompatActivity {
     OnDateSetListener onEndDateSetListener = new OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int day) {
+            month = month+1;
+            endYear = year;
+            endMonth = month;
+            endDay = day;
             eventEndDate.setText(dateValuesToString(year, month, day));
         }
     };
@@ -181,6 +209,8 @@ public class AddEventActivity extends AppCompatActivity {
     OnTimeSetListener onStartTimeSetListener = new OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hour, int minute) {
+            startHour = hour;
+            startMinute = minute;
             eventStartTime.setText(timeValuesToString(hour, minute));
         }
     };
@@ -188,6 +218,8 @@ public class AddEventActivity extends AppCompatActivity {
     OnTimeSetListener onEndTimeSetListener = new OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hour, int minute) {
+            endHour = hour;
+            endMinute = minute;
             eventEndTime.setText(timeValuesToString(hour, minute));
         }
     };
@@ -208,10 +240,21 @@ public class AddEventActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.save_menu_item:
-                break;
+                saveEventAndCloseActivity();
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void saveEventAndCloseActivity() {
+        String name = eventName.getText().toString();
+        String location = eventLocation.getText().toString();
+        CalendarEvent event = new CalendarEvent(name, location, startYear, startMonth, startDay,
+                startHour, startMinute, endYear, endMonth, endDay, endHour, endMinute, color);
+        Intent intent = new Intent();
+        intent.putExtra(IntentKey.AddEventIntent, event);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }

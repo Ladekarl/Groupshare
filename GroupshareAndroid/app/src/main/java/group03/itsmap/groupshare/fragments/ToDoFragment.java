@@ -91,14 +91,14 @@ public class ToDoFragment extends Fragment {
         super.onPause();
     }
 
-    private void saveToDoList() {
-        ToDoService.startActionSaveToDoList(getActivity(), toDoList, group.getId(), toDoListId, userId);
-    }
+        private void saveToDoList() {
+            ToDoService.startActionSaveToDoList(getActivity(), toDoList, group.getId(), toDoListId, userId);
+        }
 
 
-    private void getToDoListFromService() {
-        ToDoService.startActionGetToDoList(getActivity(), group.getId(), toDoListId, userId);
-    }
+        private void getToDoListFromService() {
+            ToDoService.startActionGetToDoList(getActivity(), group.getId(), toDoListId, userId);
+        }
 
     private class ToDoListReceiver extends BroadcastReceiver {
         private ToDoListReceiver() {

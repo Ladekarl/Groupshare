@@ -12,6 +12,7 @@ public class Group implements Parcelable {
     private ArrayList<Friend> friends;
     private ArrayList<ToDoList> toDoLists;
     private long id;
+    private ArrayList<GroupShareCalendar> calendars;
 
     public Group() {
     }
@@ -73,13 +74,23 @@ public class Group implements Parcelable {
         this.toDoLists.add(toDoList);
     }
 
+    public ArrayList<GroupShareCalendar> getCalendars() {
+        return calendars;
+    }
+
+    public void setCalendars(ArrayList<GroupShareCalendar> calendars) {
+        this.calendars = calendars;
+    }
+
     public Group(Parcel parcel) {
         name = parcel.readString();
         id = parcel.readLong();
         friends = new ArrayList<>();
         toDoLists = new ArrayList<>();
+        calendars = new ArrayList<>();
         parcel.readTypedList(friends, Friend.CREATOR);
         parcel.readTypedList(toDoLists, ToDoList.CREATOR);
+        parcel.readTypedList(calendars, GroupShareCalendar.CREATOR);
     }
 
 
@@ -94,6 +105,7 @@ public class Group implements Parcelable {
         dest.writeLong(id);
         dest.writeTypedList(friends);
         dest.writeTypedList(toDoLists);
+        dest.writeTypedList(calendars);
     }
 
     public static Creator<Group> CREATOR = new Creator<Group>() {

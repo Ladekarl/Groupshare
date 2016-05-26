@@ -39,4 +39,6 @@
     <string name="event_start_date_hint">Choose start date…</string>
     <string name="event_end_date_hint">Choose end date…</string>
     <string name="event_location_hint">Enter location…</string>
+    <string name="event_color_hint">Choose event color…</string>
+    <string name="event_color_selected">Event color</string>
 </resources>

@@ -1,9 +1,13 @@
 package group03.itsmap.groupshare.fragments;
 
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,14 +26,43 @@ import java.util.Locale;
 
 import group03.itsmap.groupshare.R;
 import group03.itsmap.groupshare.activities.CalendarActivity;
+import group03.itsmap.groupshare.activities.GroupActivity;
+import group03.itsmap.groupshare.activities.ToDoActivity;
+import group03.itsmap.groupshare.models.Group;
+import group03.itsmap.groupshare.models.GroupShareCalendar;
+import group03.itsmap.groupshare.services.CalendarService;
+import group03.itsmap.groupshare.services.ToDoService;
+import group03.itsmap.groupshare.utils.CalendarMapper;
+import group03.itsmap.groupshare.utils.FacebookUtil;
 
 public class CalendarFragment extends Fragment implements WeekView.EventClickListener, MonthLoader.MonthChangeListener, WeekView.EventLongPressListener, WeekView.EmptyViewLongPressListener {
 
     private WeekView weekView;
+    private GroupShareCalendar groupShareCalendar;
+    private Group group;
+    private String userId;
+    private long calendarId;
+    private List<WeekViewEvent> weekViewEvents;
+    private CalendarReceiver calendarReceiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        userId = FacebookUtil.getFacebookUserId(getActivity().getApplicationContext());
+        if (getArguments() != null) {
+            group = getArguments().getParcelable(GroupActivity.GROUP_KEY);
+            calendarId = getArguments().getLong(GroupActivity.CALENDAR_ID_KEY);
+            if (group != null) {
+                IntentFilter calendarIntentFilter = new IntentFilter(
+                        CalendarService.GET_CALENDAR_BROADCAST_INTENT + group.getId() + calendarId + userId);
+
+                calendarReceiver = new CalendarReceiver();
+                LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
+                        calendarReceiver,
+                        calendarIntentFilter);
+            }
+        }
+        weekViewEvents = new ArrayList<>();
     }
 
     @Override
@@ -56,6 +89,8 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
             @Override
             public void onClick(View v) {
                 Intent startCalendarActivityIntent = new Intent(getActivity(), CalendarActivity.class);
+                startCalendarActivityIntent.putExtra(CalendarActivity.GROUP_INTENT_KEY, group);
+                startCalendarActivityIntent.putExtra(CalendarActivity.CALENDAR_ID_INTENT_KEY, calendarId);
                 startActivity(startCalendarActivityIntent);
             }
         });
@@ -69,11 +104,11 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
             public String interpretDate(Calendar date) {
                 SimpleDateFormat weekdayNameFormat = new SimpleDateFormat("EEEE", Locale.getDefault());
                 String weekday = weekdayNameFormat.format(date.getTime());
-                SimpleDateFormat format = new SimpleDateFormat(" M/d", Locale.getDefault());
+                SimpleDateFormat format = new SimpleDateFormat("d/M", Locale.getDefault());
 
                 if (shortDate)
                     weekday = String.valueOf(weekday.charAt(0));
-                return weekday.toUpperCase() + format.format(date.getTime());
+                return weekday.toUpperCase() + " " + format.format(date.getTime());
             }
 
             @Override
@@ -83,8 +118,29 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
         });
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        getCalendarFromService();
+    }
+
+    @Override
+    public void onPause() {
+        saveCalendar();
+        super.onPause();
+    }
+
+    private void saveCalendar() {
+        CalendarService.startActionSaveCalendar(getActivity(), groupShareCalendar, group.getId(), calendarId, userId);
+    }
+
+
+    private void getCalendarFromService() {
+        CalendarService.startActionGetCalendar(getActivity(), group.getId(), calendarId, userId);
+    }
+
     protected String getEventTitle(Calendar time) {
-        return String.format("Event of %02d:%02d %s/%d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE), time.get(Calendar.MONTH)+1, time.get(Calendar.DAY_OF_MONTH));
+        return String.format("Event of %02d:%02d %s/%d", time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE), time.get(Calendar.MONTH) + 1, time.get(Calendar.DAY_OF_MONTH));
     }
 
     @Override
@@ -99,110 +155,30 @@ public class CalendarFragment extends Fragment implements WeekView.EventClickLis
     public void onEmptyViewLongPress(Calendar time) {
     }
 
-
     @Override
     public List<? extends WeekViewEvent> onMonthChange(int newYear, int newMonth) {
-        // Populate the week view with some events.
         List<WeekViewEvent> events = new ArrayList<>();
-
-        Calendar startTime = Calendar.getInstance();
-        startTime.set(Calendar.HOUR_OF_DAY, 3);
-        startTime.set(Calendar.MINUTE, 0);
-        startTime.set(Calendar.MONTH, newMonth-1);
-        startTime.set(Calendar.YEAR, newYear);
-        Calendar endTime = (Calendar) startTime.clone();
-        endTime.add(Calendar.HOUR, 1);
-        endTime.set(Calendar.MONTH, newMonth-1);
-        WeekViewEvent event = new WeekViewEvent(1, getEventTitle(startTime), startTime, endTime);
-        event.setColor(getResources().getColor(R.color.group_list_1));
-        events.add(event);
-
-        startTime = Calendar.getInstance();
-        startTime.set(Calendar.HOUR_OF_DAY, 3);
-        startTime.set(Calendar.MINUTE, 30);
-        startTime.set(Calendar.MONTH, newMonth-1);
-        startTime.set(Calendar.YEAR, newYear);
-        endTime = (Calendar) startTime.clone();
-        endTime.set(Calendar.HOUR_OF_DAY, 4);
-        endTime.set(Calendar.MINUTE, 30);
-        endTime.set(Calendar.MONTH, newMonth-1);
-        event = new WeekViewEvent(10, getEventTitle(startTime), startTime, endTime);
-        event.setColor(getResources().getColor(R.color.group_list_2));
-        events.add(event);
-
-        startTime = Calendar.getInstance();
-        startTime.set(Calendar.HOUR_OF_DAY, 4);
-        startTime.set(Calendar.MINUTE, 20);
-        startTime.set(Calendar.MONTH, newMonth-1);
-        startTime.set(Calendar.YEAR, newYear);
-        endTime = (Calendar) startTime.clone();
-        endTime.set(Calendar.HOUR_OF_DAY, 5);
-        endTime.set(Calendar.MINUTE, 0);
-        event = new WeekViewEvent(10, getEventTitle(startTime), startTime, endTime);
-        event.setColor(getResources().getColor(R.color.group_list_3));
-        events.add(event);
-
-        startTime = Calendar.getInstance();
-        startTime.set(Calendar.HOUR_OF_DAY, 5);
-        startTime.set(Calendar.MINUTE, 30);
-        startTime.set(Calendar.MONTH, newMonth-1);
-        startTime.set(Calendar.YEAR, newYear);
-        endTime = (Calendar) startTime.clone();
-        endTime.add(Calendar.HOUR_OF_DAY, 2);
-        endTime.set(Calendar.MONTH, newMonth-1);
-        event = new WeekViewEvent(2, getEventTitle(startTime), startTime, endTime);
-        event.setColor(getResources().getColor(R.color.group_list_4));
-        events.add(event);
-
-        startTime = Calendar.getInstance();
-        startTime.set(Calendar.HOUR_OF_DAY, 5);
-        startTime.set(Calendar.MINUTE, 0);
-        startTime.set(Calendar.MONTH, newMonth-1);
-        startTime.set(Calendar.YEAR, newYear);
-        startTime.add(Calendar.DATE, 1);
-        endTime = (Calendar) startTime.clone();
-        endTime.add(Calendar.HOUR_OF_DAY, 3);
-        endTime.set(Calendar.MONTH, newMonth - 1);
-        event = new WeekViewEvent(3, getEventTitle(startTime), startTime, endTime);
-        event.setColor(getResources().getColor(R.color.group_list_5));
-        events.add(event);
-
-        startTime = Calendar.getInstance();
-        startTime.set(Calendar.DAY_OF_MONTH, 15);
-        startTime.set(Calendar.HOUR_OF_DAY, 3);
-        startTime.set(Calendar.MINUTE, 0);
-        startTime.set(Calendar.MONTH, newMonth-1);
-        startTime.set(Calendar.YEAR, newYear);
-        endTime = (Calendar) startTime.clone();
-        endTime.add(Calendar.HOUR_OF_DAY, 3);
-        event = new WeekViewEvent(4, getEventTitle(startTime), startTime, endTime);
-        event.setColor(getResources().getColor(R.color.group_list_6));
-        events.add(event);
-
-        startTime = Calendar.getInstance();
-        startTime.set(Calendar.DAY_OF_MONTH, 1);
-        startTime.set(Calendar.HOUR_OF_DAY, 3);
-        startTime.set(Calendar.MINUTE, 0);
-        startTime.set(Calendar.MONTH, newMonth-1);
-        startTime.set(Calendar.YEAR, newYear);
-        endTime = (Calendar) startTime.clone();
-        endTime.add(Calendar.HOUR_OF_DAY, 3);
-        event = new WeekViewEvent(5, getEventTitle(startTime), startTime, endTime);
-        event.setColor(getResources().getColor(R.color.group_list_7));
-        events.add(event);
-
-        startTime = Calendar.getInstance();
-        startTime.set(Calendar.DAY_OF_MONTH, startTime.getActualMaximum(Calendar.DAY_OF_MONTH));
-        startTime.set(Calendar.HOUR_OF_DAY, 15);
-        startTime.set(Calendar.MINUTE, 0);
-        startTime.set(Calendar.MONTH, newMonth-1);
-        startTime.set(Calendar.YEAR, newYear);
-        endTime = (Calendar) startTime.clone();
-        endTime.add(Calendar.HOUR_OF_DAY, 3);
-        event = new WeekViewEvent(5, getEventTitle(startTime), startTime, endTime);
-        event.setColor(getResources().getColor(R.color.group_list_8));
-        events.add(event);
-
+        ArrayList<WeekViewEvent> newEvents = CalendarMapper.getNewEvents(newYear, newMonth, weekViewEvents);
+        events.addAll(newEvents);
         return events;
+    }
+
+    @Override
+    public void onDestroy() {
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(calendarReceiver);
+        super.onDestroy();
+    }
+
+    private class CalendarReceiver extends BroadcastReceiver {
+        private CalendarReceiver() {
+        }
+
+        public void onReceive(Context context, Intent intent) {
+            GroupShareCalendar calendar = intent.getParcelableExtra(CalendarService.EXTRA_CALENDAR);
+            if (calendar == null) return;
+            groupShareCalendar = calendar;
+            weekViewEvents = CalendarMapper.calendarEventsToWeekViewEvents(calendar.getCalendarEvents());
+            weekView.notifyDatasetChanged();
+        }
     }
 }

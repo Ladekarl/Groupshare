@@ -44,7 +44,9 @@ import group03.itsmap.groupshare.fragments.FriendsFragment;
 import group03.itsmap.groupshare.fragments.ToDoFragment;
 import group03.itsmap.groupshare.models.Friend;
 import group03.itsmap.groupshare.models.Group;
+import group03.itsmap.groupshare.models.GroupShareCalendar;
 import group03.itsmap.groupshare.models.ToDoList;
+import group03.itsmap.groupshare.services.CalendarService;
 import group03.itsmap.groupshare.services.GroupService;
 import group03.itsmap.groupshare.services.ToDoService;
 import group03.itsmap.groupshare.utils.FacebookUtil;
@@ -54,6 +56,8 @@ public class GroupActivity extends AppCompatActivity {
 
     public final static String GROUP_KEY = "group03.itsmap.groupshare.activities.groupactivity.GroupId";
     public final static String TODOLIST_ID_KEY = "group03.itsmap.groupshare.activities.groupactivity.ToDoListId";
+    public final static String CALENDAR_ID_KEY = "group03.itsmap.groupshare.activities.groupactivity.CalendarId";
+
     private Boolean userDeletedGroup = false;
     private Group group;
     private List<Friend> friendsToBeInvited;
@@ -181,12 +185,19 @@ public class GroupActivity extends AppCompatActivity {
             group.addToDoList(toDoList);
             ToDoService.startActionSaveToDoList(GroupActivity.this, toDoList, group.getId(), toDoList.getId(), userId);
         }
+        if (group.getCalendars().size() == 0) {
+            GroupShareCalendar calendar = new GroupShareCalendar(1, "Calendar", null);
+            group.getCalendars().add(calendar);
+            CalendarService.startActionSaveCalendar(GroupActivity.this, calendar, group.getId(), calendar.getId(), userId);
+        }
         bundle.putParcelable(GROUP_KEY, group);
         bundle.putLong(TODOLIST_ID_KEY, group.getToDoLists().get(0).getId());
+        bundle.putLong(CALENDAR_ID_KEY, group.getCalendars().get(0).getId());
         ToDoFragment toDoFragment = new ToDoFragment();
         toDoFragment.setArguments(bundle);
         // Create calendar fragment
         CalendarFragment calendarFragment = new CalendarFragment();
+        calendarFragment.setArguments(bundle);
         // Make transaction
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

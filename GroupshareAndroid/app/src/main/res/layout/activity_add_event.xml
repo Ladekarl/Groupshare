@@ -182,7 +182,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:hint="Default color"
+            android:hint="@string/event_color_hint"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"
             android:textSize="18sp" />
