@@ -158,7 +158,7 @@ public class GroupOverviewActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             ArrayList<Group> groups = intent.getParcelableArrayListExtra(GroupService.EXTRA_GROUPS);
             if (groups == null) return;
-            if (groupList.containsAll(groups)) return;
+            if (groupList.equals(groups)) return;
             groupList = groups;
             if (groupListAdapter == null) return;
             refreshAdapter();
