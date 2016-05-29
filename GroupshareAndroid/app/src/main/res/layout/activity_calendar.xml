@@ -7,7 +7,7 @@
     android:background="@color/group_list_7"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context=".activities.CalendarActivity">
+    tools:context="dk.iha.itsmap.f16.grp03.groupshare.activities.CalendarActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/calendar_toolbar"

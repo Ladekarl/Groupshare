@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="group03.itsmap.groupshare.fragments.CalendarFragment"
+    tools:context="dk.iha.itsmap.f16.grp03.groupshare.fragments.CalendarFragment"
     android:background="@color/group_list_7"
     android:orientation="vertical">
 

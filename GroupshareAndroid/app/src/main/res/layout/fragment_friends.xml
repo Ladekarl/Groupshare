@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    tools:context="group03.itsmap.groupshare.fragments.FriendsFragment">
+    tools:context="dk.iha.itsmap.f16.grp03.groupshare.fragments.FriendsFragment">
 
     <!-- From https://github.com/lucasr/twoway-view -->
     <org.lucasr.twowayview.TwoWayView xmlns:android="http://schemas.android.com/apk/res/android"

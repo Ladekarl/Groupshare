@@ -7,7 +7,7 @@
     android:background="@color/group_list_5"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context=".activities.ToDoActivity">
+    tools:context="dk.iha.itsmap.f16.grp03.groupshare.activities.ToDoActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/todo_toolbar"
@@ -33,6 +33,7 @@
         android:layout_margin="20dp"
         android:background="@null"
         android:gravity="center"
+        android:inputType="text"
         android:textColor="@android:color/white"
         android:textSize="20sp" />
 

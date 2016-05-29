@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.GroupActivity">
+    tools:context="dk.iha.itsmap.f16.grp03.groupshare.activities.GroupActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/group_toolbar"

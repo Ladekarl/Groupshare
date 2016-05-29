@@ -45,4 +45,9 @@
     <string name="start_time_hint">Start time…</string>
     <string name="end_time_hint">End time…</string>
     <string name="add_event_fill_fields">Please enter name, date and time!</string>
+    <string name="groupshare_logo">Groupshare Logo</string>
+    <string name="event_name_image">Event name image</string>
+    <string name="event_time_image">Event time image</string>
+    <string name="event_location_image">Event location image</string>
+    <string name="event_color_image">Event color image</string>
 </resources>
