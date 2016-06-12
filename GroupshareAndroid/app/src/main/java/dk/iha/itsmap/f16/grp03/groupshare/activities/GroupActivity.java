@@ -304,7 +304,7 @@ public class GroupActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Friend f = (Friend) parent.getItemAtPosition(position);
-                CheckBox box = (CheckBox) parent.findViewById(R.id.invite_friends_checkbox);
+                CheckBox box = (CheckBox) view.findViewById(R.id.invite_friends_checkbox);
 
                 if (box != null) {
                     if (box.isChecked()) {
